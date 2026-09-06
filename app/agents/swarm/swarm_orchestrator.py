@@ -13,6 +13,7 @@ from app.agents.swarm.sgc_executive_agent import SGCExecutiveAgent
 from app.agents.swarm.pc_pilot_agent import PCPilotAgent
 from app.agents.swarm.memory_vault_agent import MemoryVaultAgent
 from app.agents.swarm.antigravity_agent import AntigravityAgent
+from app.agents.swarm.server_agent import ServerAgent
 
 logger = logging.getLogger("SwarmOrchestrator")
 
@@ -25,7 +26,8 @@ class SwarmOrchestrator:
             "SGCExecutive": SGCExecutiveAgent(),
             "PCPilot": PCPilotAgent(),
             "MemoryVault": MemoryVaultAgent(),
-            "Antigravity": AntigravityAgent()
+            "Antigravity": AntigravityAgent(),
+            "ServerAgent": ServerAgent()
         }
 
     async def dispatch(self, target_agent: str, action: str, payload: Optional[Dict[str, Any]] = None) -> SwarmTaskMessage:

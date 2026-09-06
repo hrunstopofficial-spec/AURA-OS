@@ -682,6 +682,14 @@ class AgentBrain:
                 msg_lower = user_message.lower()
                 if agent_name == "SGCExecutive":
                     action = "GET_LATEST_BILL" if any(w in msg_lower for w in ["last bill", "bill number", "latest bill", "bill no", "poitu", "evalo", "bill"]) else "CHECK_OVERDUE"
+                elif agent_name == "ServerAgent":
+                    payload = {"query": user_message}
+                    if any(w in msg_lower for w in ["sync", "cloud sync"]):
+                        action = "SYNC_MEMORY"
+                    elif any(w in msg_lower for w in ["allocate", "memory", "storage", "pool", "nodes"]):
+                        action = "ALLOCATE_SERVER_MEMORY"
+                    else:
+                        action = "CHECK_SERVER_STATUS"
                 else:
                     payload = {"query": user_message}
                     if any(w in msg_lower for w in ["allocate project", "project memory", "project-ku memory", "allocate memory for"]):

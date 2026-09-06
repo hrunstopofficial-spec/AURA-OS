@@ -79,16 +79,22 @@ class CognitiveRouter:
             r"(what.*is.*the.*status|how.*is.*the.*task|did.*you.*finish)",
             r"(sgc|bill|invoice|overdue|balance|ledger|party)",
             r"(list.*files|changed.*files|show.*logs?|task.*ledger)",
-            r"(memory.*eruka|memory.*irukka|store.*panni|remember|unaku.*memory|save.*data|store.*pannu|allocate|allocation|note.*pannu|note.*panniko|save.*pannu)"
+            r"(memory.*eruka|memory.*irukka|store.*panni|remember|unaku.*memory|save.*data|store.*pannu|allocate|allocation|note.*pannu|note.*panniko|save.*pannu)",
+            r"(server.*agent|cloud.*server|server.*status|render.*status|cloud.*memory|server.*memory|server.*health|server.*allocate)"
         ]
         for pat in status_patterns:
             if re.search(pat, lower_text):
-                agent = "SGCExecutive" if any(k in lower_text for k in ["sgc", "bill", "invoice", "overdue", "balance", "ledger", "msk", "sowbhagiya", "laxmi", "gaia"]) else "MemoryVault"
+                if any(k in lower_text for k in ["server agent", "cloud server", "render", "server health", "server status", "server memory", "server ku"]):
+                    agent = "ServerAgent"
+                elif any(k in lower_text for k in ["sgc", "bill", "invoice", "overdue", "balance", "ledger", "msk", "sowbhagiya", "laxmi", "gaia"]):
+                    agent = "SGCExecutive"
+                else:
+                    agent = "MemoryVault"
                 return CognitiveRoute(
                     track="STATUS_OR_MEMORY_QUERY",
                     target_swarm_agent=agent,
                     confidence=0.96,
-                    goal_summary="User is querying status of a previous task, business bills, or persistent memory",
+                    goal_summary="User is querying status of a previous task, business bills, server agent, or persistent memory",
                     requires_pc=False
                 )
 

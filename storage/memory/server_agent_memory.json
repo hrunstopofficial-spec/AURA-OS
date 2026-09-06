@@ -1,0 +1,41 @@
+{
+  "server_agent_id": "server_agent_cloud_primary",
+  "name": "AURA Cloud Server Executive Agent",
+  "cloud_endpoints": {
+    "render_production": "https://aura-os-n6n3.onrender.com",
+    "health_check": "https://aura-os-n6n3.onrender.com/health",
+    "docs": "https://aura-os-n6n3.onrender.com/docs",
+    "websocket_bridge": "wss://aura-os-n6n3.onrender.com/api/v1/bridge/ws",
+    "cloud_memory_api": "https://aura-os-n6n3.onrender.com/api/v1/memory"
+  },
+  "allocated_storage": {
+    "cloud_database": "PostgreSQL / SQLite Production DB Schema with 25+ Tables",
+    "drive_mesh_node_01": {
+      "node_id": "14fGVZomgy2CItfspYo7cVXSImAqJDZZX",
+      "role": "Core Memory & Task Logs (25GB Pool)"
+    },
+    "drive_mesh_node_09": {
+      "node_id": "1SoZDnh1JPz59NaKxvnR72xtJSYWbL8uU",
+      "role": "Cloud Database Snapshots & Disaster Recovery (25GB Pool)"
+    },
+    "drive_mesh_node_10": {
+      "node_id": "1Qdf3ac_4NEK5id-5ww9V7QgpD5eMxLYC",
+      "role": "Multi-Agent Shared Overflow & Ephemeral Buffer (25GB Pool)"
+    },
+    "total_cloud_mesh_allocated_gb": 75
+  },
+  "runtime_capabilities": [
+    "24/7 Always-Awake Render Keep-Alive Pinger",
+    "WebSocket Reverse-Tunnel Bridge (Local PC Hardware Controller)",
+    "Cloud REST Memory API Synchronizer (/api/v1/memory/store & /api/v1/memory/query)",
+    "Remote Swarm Task Dispatcher",
+    "Multi-Tenant Tenant Boundary & Security Guard"
+  ],
+  "sync_status": {
+    "last_sync": "2026-09-05T22:52:00.000000",
+    "status": "ALLOCATED_AND_OPERATIONAL",
+    "connected_workers": [
+      "mukil_primary_pc"
+    ]
+  }
+}

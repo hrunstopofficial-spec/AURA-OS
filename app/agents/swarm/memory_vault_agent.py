@@ -101,8 +101,9 @@ class MemoryVaultAgent(BaseSwarmAgent):
                     "• **Partition 4 (Cross-Device Chat History)**: `storage/memory/conversations_history.json`\n"
                     f"• **Partition 5 (Dynamic User Knowledge Vault)**: `storage/memory/custom_facts.json` ({facts_count} Active Facts)\n"
                     f"• **Partition 6 (Antigravity Project Memory)**: `storage/memory/projects_memory.json` ({proj_count} Active Projects)\n"
-                    "• **Partition 7 (SGC Billing & Ledger)**: `AppData/Roaming/sgc-billing/sgc-billing-data.json`\n"
-                    "• **Partition 8 (250GB Distributed Cloud Mesh)**: 10 Dedicated Google Drive Nodes (10x25GB)\n\n"
+                    "• **Partition 7 (Server Agent Cloud Memory)**: `storage/memory/server_agent_memory.json` (24/7 Cloud Engine, 75GB Mesh Nodes 01, 09, 10)\n"
+                    "• **Partition 8 (SGC Billing & Ledger)**: `AppData/Roaming/sgc-billing/sgc-billing-data.json`\n"
+                    "• **Partition 9 (250GB Distributed Cloud Mesh)**: 10 Dedicated Google Drive Nodes (10x25GB)\n\n"
                     "Maapla, ella data-vum multi-device persistent memory-la allocated & permanently secure-aa irukku!"
                 )
                 message.status = "COMPLETED"

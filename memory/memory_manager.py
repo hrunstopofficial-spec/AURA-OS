@@ -9,6 +9,7 @@ PROFILE_FILE = os.path.join(MEMORY_DIR, 'user_profile.json')
 TASK_LOG_FILE = os.path.join(MEMORY_DIR, 'task_log.json')
 CUSTOM_FACTS_FILE = os.path.join(MEMORY_DIR, 'custom_facts.json')
 PROJECTS_MEMORY_FILE = os.path.join(MEMORY_DIR, 'projects_memory.json')
+SERVER_AGENT_MEMORY_FILE = os.path.join(MEMORY_DIR, 'server_agent_memory.json')
 
 class MemoryManager:
     def __init__(self):
@@ -141,9 +142,19 @@ class MemoryManager:
                 pass
         return {}
 
+    def get_server_agent_memory(self) -> dict:
+        if os.path.exists(SERVER_AGENT_MEMORY_FILE):
+            try:
+                with open(SERVER_AGENT_MEMORY_FILE, 'r', encoding='utf-8') as f:
+                    return json.load(f)
+            except Exception:
+                pass
+        return {}
+
     def get_all_memory_allocations(self) -> dict:
         facts = self.get_facts()
         projects = self.get_projects_memory()
+        server_mem = self.get_server_agent_memory()
         return {
             "partition_1_core_profile": "storage/memory/user_profile.json (Active Profile, Karur, VSB, Skills)",
             "partition_2_system_context": "storage/memory/context.json (Active Phase, Drive Vaults, Endpoints)",
@@ -151,9 +162,10 @@ class MemoryManager:
             "partition_4_conversations": "storage/memory/conversations_history.json (Rolling cross-device history)",
             "partition_5_custom_facts": f"storage/memory/custom_facts.json ({len(facts)} active custom user memories)",
             "partition_6_projects_memory": f"storage/memory/projects_memory.json ({len(projects)} active projects allocated)",
-            "partition_7_sgc_billing": "AppData/Roaming/sgc-billing/sgc-billing-data.json (Live SGC Yarn Dyeing Ledger)",
-            "partition_8_drive_mesh": "250GB Distributed Google Drive Mesh (10 Dedicated Cloud Nodes)",
-            "total_local_partitions": 7,
+            "partition_7_server_agent": f"storage/memory/server_agent_memory.json (24/7 Cloud Production Engine: {server_mem.get('cloud_endpoints', {}).get('render_production', 'https://aura-os-n6n3.onrender.com')}, 75GB Mesh across Nodes 01, 09, 10)",
+            "partition_8_sgc_billing": "AppData/Roaming/sgc-billing/sgc-billing-data.json (Live SGC Yarn Dyeing Ledger)",
+            "partition_9_drive_mesh": "250GB Distributed Google Drive Mesh (10 Dedicated Cloud Nodes)",
+            "total_local_partitions": 8,
             "cloud_mesh_nodes": 10,
             "status": "100% OPERATIONAL & PERSISTENT"
         }
