@@ -14,9 +14,28 @@ from brain.cognitive_router import CognitiveRouter, CognitiveRoute
 from brain.device_presence_router import DevicePresenceRouter
 from brain.codeact_cloud_runner import CodeActCloudRunner
 from app.agents.swarm import SwarmOrchestrator
-from brain.adaptive_scheduler import AdaptiveScheduler
+import asyncio
 
 logger = logging.getLogger(__name__)
+
+
+def _run_async_safely(coro):
+    """
+    Safely executes an async coroutine whether or not an asyncio event loop is already running.
+    Prevents 'RuntimeError: asyncio.run() cannot be called from a running event loop'.
+    """
+    try:
+        loop = asyncio.get_running_loop()
+    except RuntimeError:
+        loop = None
+
+    if loop and loop.is_running():
+        with concurrent.futures.ThreadPoolExecutor(max_workers=1) as executor:
+            future = executor.submit(asyncio.run, coro)
+            return future.result()
+    else:
+        return asyncio.run(coro)
+
 
 TOOLS_DEFINITION = [
     {
@@ -706,7 +725,7 @@ class AgentBrain:
                     else:
                         action = "QUERY_TASK_STATUS"
                 
-                swarm_res = asyncio.run(self.swarm.dispatch(agent_name, action, payload))
+                swarm_res = _run_async_safely(self.swarm.dispatch(agent_name, action, payload))
                 summary = swarm_res.result.get("summary", "Status retrieved successfully.") if swarm_res.result else "All tasks tracked in persistent memory."
                 reply = summary
                 self.mem.append_conversation(user_name, user_message)
@@ -715,7 +734,6 @@ class AgentBrain:
 
             # ── TRACK 3: DEVICE_PRESENTATION & PHYSICAL PC ACTION ────────────
             elif route.track == "DEVICE_PRESENTATION":
-                import asyncio
                 msg_lower = user_message.lower()
                 if "notepad" in msg_lower:
                     if any(w in msg_lower for w in ["close", "moodu", "kill", "exit"]):
@@ -761,21 +779,20 @@ class AgentBrain:
                     action = "OPEN_ON_SCREEN"
                     payload = {"target": user_message}
 
-                swarm_res = asyncio.run(self.swarm.dispatch("PCPilot", action, payload))
+                swarm_res = _run_async_safely(self.swarm.dispatch("PCPilot", action, payload))
                 if swarm_res.status == "COMPLETED" and swarm_res.result:
                     reply = swarm_res.result.get("summary", "PC command executed successfully!")
                     self.mem.append_conversation(user_name, user_message)
                     self.mem.append_conversation("JARVIS", reply)
                     return reply
                 else:
-                    pres_res = asyncio.run(self.device_router.route_presentation(user_message, user_name=user_name))
+                    pres_res = _run_async_safely(self.device_router.route_presentation(user_message, user_name=user_name))
                     self.mem.append_conversation(user_name, user_message)
                     self.mem.append_conversation("JARVIS", pres_res.status_message)
                     return pres_res.status_message
 
             # ── TRACK 4: AUTONOMOUS_HEAVY_TASK via Swarm ─────────────────────
             elif route.track == "AUTONOMOUS_HEAVY_TASK" and route.target_swarm_agent in ["WebScout", "PlacementHunter", "SGCExecutive", "Antigravity"]:
-                import asyncio
                 if route.target_swarm_agent == "Antigravity":
                     action = "BUILD_PROJECT" if any(w in user_message.lower() for w in ["build", "scaffold", "create", "project", "app"]) else ("RUN_TERMINAL" if any(w in user_message.lower() for w in ["cmd", "command", "terminal", "powershell", "run"]) else "GENERAL_ENGINEERING")
                     swarm_payload = {"description": user_message, "project_name": "autonomous_project", "command": user_message}
@@ -789,7 +806,7 @@ class AgentBrain:
                     action = "CHECK_OVERDUE"
                     swarm_payload = {"query": user_message}
 
-                swarm_res = asyncio.run(self.swarm.dispatch(route.target_swarm_agent, action, swarm_payload))
+                swarm_res = _run_async_safely(self.swarm.dispatch(route.target_swarm_agent, action, swarm_payload))
                 if swarm_res.status == "COMPLETED" and swarm_res.result:
                     summary = swarm_res.result.get("summary", "Task executed successfully by Swarm!")
                     reply = f"✅ *Task Executed by {route.target_swarm_agent}:*\n\n{summary}\n\nMaapla, output verified & saved in Distributed Mesh!"

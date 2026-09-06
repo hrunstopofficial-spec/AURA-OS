@@ -180,7 +180,7 @@ async def voice_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.effective_chat.send_action("typing")
 
         # Process through AgentBrain
-        reply = brain.process_message(transcribed_text, user_name=user_name)
+        reply = await asyncio.to_thread(brain.process_message, transcribed_text, user_name=user_name)
         await _send_reply_safely(update, reply)
 
         # If screenshot was taken, send photo directly to Telegram
@@ -210,7 +210,7 @@ async def chat_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     logger.info(f"Received text message from {user_name}: {user_text}")
     
     await update.effective_chat.send_action("typing")
-    reply = brain.process_message(user_text, user_name=user_name)
+    reply = await asyncio.to_thread(brain.process_message, user_text, user_name=user_name)
     await _send_reply_safely(update, reply)
 
     # If screenshot was taken, send photo directly to Telegram
