@@ -1,6 +1,7 @@
 import os
 import sys
 import re
+import asyncio
 import logging
 import tempfile
 from typing import Optional, List, Dict, Any
@@ -18,6 +19,14 @@ from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, fil
 
 logging.basicConfig(format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO)
 logger = logging.getLogger(__name__)
+
+async def global_error_handler(update: object, context: ContextTypes.DEFAULT_TYPE):
+    logger.error(f"Exception while handling Telegram update: {context.error}", exc_info=context.error)
+    if isinstance(update, Update) and update.effective_message:
+        try:
+            await update.effective_message.reply_text(f"⚠️ AURA Error: {context.error}")
+        except Exception:
+            pass
 
 mem = MemoryManager()
 brain = AgentBrain()
@@ -61,10 +70,38 @@ async def status_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE):
         f"• *Voice Engine*: 🟢 2-Way Voice Active (Whisper + Neural TTS)\n"
         f"• *Brain Engine*: 🟢 Groq GPT-OSS 120B (ReAct Agent Active)\n"
         f"• *Drive Vault*: [Open 5TB Vault]({DRIVE_VAULT_URL})\n"
-        "• *PC Node*: 🟢 Online & Autonomous\n"
+        f"• *PC Node*: 🟢 Online & Autonomous\n"
         f"• *Last Updated*: {time_val}"
     )
     await update.message.reply_text(status_text, parse_mode="Markdown", disable_web_page_preview=True)
+
+async def diagnose_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Executes live Phase 1 hardware telemetry and AI health diagnosis."""
+    await update.message.reply_text("🔍 *Scanning PC Hardware Telemetry & Vitals...*", parse_mode="Markdown")
+    try:
+        from tools.registry import registry
+        from tools import system_tools
+        from storage.memory.system_metrics import metrics_store
+        from agents.analysis_engine import analysis_engine
+
+        vitals_res = registry.execute_tool("get_system_vitals")
+        if not vitals_res["success"]:
+            await update.message.reply_text(f"❌ Error: {vitals_res['error']}")
+            return
+
+        vitals = vitals_res["result"]
+        metrics_store.record_snapshot(vitals)
+        delta = metrics_store.compute_telemetry_delta(vitals, hours=24.0)
+        diagnosis = analysis_engine.analyze(vitals, delta)
+
+        summary = diagnosis["tanglish_summary"]
+        recs = "\n".join([f"• {r}" for r in diagnosis["recommendations"]])
+        full_msg = f"📊 *AURA-OS HARDWARE DIAGNOSIS*\n\n{summary}\n\n💡 *Action Items:*\n{recs}"
+        await update.message.reply_text(full_msg, parse_mode="Markdown")
+    except Exception as e:
+        logger.error(f"Diagnose error: {e}", exc_info=True)
+        await update.message.reply_text(f"❌ Diagnosis error: {e}")
+
 
 async def apply_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE):
     args = context.args
@@ -230,6 +267,17 @@ async def chat_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 def main():
     import time
+    if sys.platform == "win32":
+        try:
+            import ctypes
+            user32 = ctypes.windll.user32
+            h_desk = user32.OpenDesktopW("default", 0, False, 0x0100)
+            if h_desk:
+                user32.SetThreadDesktop(h_desk)
+                print("Attached Telegram bot thread to interactive desktop (WinSta0\\default)")
+        except Exception as e:
+            logger.warning(f"Could not attach to default desktop: {e}")
+
     print("Starting Jarvis Telegram Bot with 2-Way Voice Conversations...")
     req = HTTPXRequest(
         connection_pool_size=8,
@@ -242,17 +290,21 @@ def main():
     
     app.add_handler(CommandHandler("start", start))
     app.add_handler(CommandHandler("status", status_cmd))
+    app.add_handler(CommandHandler("diagnose", diagnose_cmd))
+    app.add_handler(CommandHandler("vitals", diagnose_cmd))
     app.add_handler(CommandHandler("drive", drive_cmd))
     app.add_handler(CommandHandler("apply", apply_cmd))
     app.add_handler(MessageHandler(filters.VOICE | filters.AUDIO, voice_handler))
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, chat_handler))
+    app.add_error_handler(global_error_handler)
     
     print("Jarvis 2-Way Voice Gateway is 100% LIVE and listening!")
     
     while True:
         try:
-            app.run_polling(drop_pending_updates=True, bootstrap_retries=-1, timeout=30)
+            app.run_polling(drop_pending_updates=False, bootstrap_retries=-1, timeout=30)
             break
+
         except Exception as e:
             logger.error(f"Polling network issue: {e}. Retrying in 5 seconds...")
             time.sleep(5)

@@ -31,3 +31,23 @@ async def health_check() -> HealthResponse:
         environment=settings.ENVIRONMENT,
         database="connected" if db_healthy else "disconnected",
     )
+
+
+@router.get("/system-diagnosis")
+async def system_diagnosis():
+    """Live AURA-OS Hardware Vitals & Health Diagnosis."""
+    from tools.registry import registry
+    from tools import system_tools
+    from storage.memory.system_metrics import metrics_store
+    from agents.analysis_engine import analysis_engine
+
+    vitals_res = registry.execute_tool("get_system_vitals")
+    if not vitals_res["success"]:
+        return {"error": vitals_res["error"]}
+
+    vitals = vitals_res["result"]
+    metrics_store.record_snapshot(vitals)
+    delta = metrics_store.compute_telemetry_delta(vitals, hours=24.0)
+    diagnosis = analysis_engine.analyze(vitals, delta)
+    return diagnosis
+

@@ -44,35 +44,48 @@ class PCPilot:
         os.makedirs(self.screenshot_dir, exist_ok=True)
 
     def search_google(self, query: str) -> str:
-        """Opens Google search in default browser for given query."""
+        """Opens Google search in default browser for given query on physical screen."""
+        from tools.pc_tools import run_in_interactive_session, take_pc_screenshot
         encoded = urllib.parse.quote_plus(query.strip())
         url = f"https://www.google.com/search?q={encoded}"
-        webbrowser.open(url)
-        return f"🔎 Searched Google for: '{query}'"
+        run_in_interactive_session(f'start "" "{url}"')
+        shot = take_pc_screenshot()
+        shot_str = f" Proof Screenshot: {shot}" if shot else ""
+        return f"🔎 Searched Google for: '{query}' on your PC screen!{shot_str}"
 
     def search_youtube(self, query: str) -> str:
-        """Opens YouTube search in default browser."""
+        """Opens YouTube search in default browser on physical screen."""
+        from tools.pc_tools import run_in_interactive_session, take_pc_screenshot
         encoded = urllib.parse.quote_plus(query.strip())
         url = f"https://www.youtube.com/results?search_query={encoded}"
-        webbrowser.open(url)
-        return f"▶️ Opened YouTube search for: '{query}'"
+        run_in_interactive_session(f'start "" "{url}"')
+        shot = take_pc_screenshot()
+        shot_str = f" Proof Screenshot: {shot}" if shot else ""
+        return f"▶️ Opened YouTube search for: '{query}' on your PC screen!{shot_str}"
 
     def open_url(self, url: str) -> str:
-        """Opens any standard URL in browser."""
+        """Opens any standard URL in browser directly on physical screen."""
+        from tools.pc_tools import run_in_interactive_session, take_pc_screenshot
         clean_url = url.strip()
         if not clean_url.startswith("http://") and not clean_url.startswith("https://"):
             clean_url = "https://" + clean_url
-        webbrowser.open(clean_url)
-        return f"🌐 Opened URL: {clean_url}"
+        run_in_interactive_session(f'start "" "{clean_url}"')
+        shot = take_pc_screenshot()
+        shot_str = f" Proof Screenshot: {shot}" if shot else ""
+        return f"🌐 Opened URL: {clean_url} on your PC screen!{shot_str}"
 
     def open_known_site(self, site_name: str) -> Optional[str]:
-        """Opens well-known site by alias."""
+        """Opens well-known site by alias directly on physical screen."""
+        from tools.pc_tools import run_in_interactive_session, take_pc_screenshot
         clean = site_name.lower().strip()
         if clean in KNOWN_SITES:
             url = KNOWN_SITES[clean]
-            webbrowser.open(url)
-            return f"🌐 Opened {clean.capitalize()} ({url})"
+            run_in_interactive_session(f'start "" "{url}"')
+            shot = take_pc_screenshot()
+            shot_str = f" Proof Screenshot: {shot}" if shot else ""
+            return f"🌐 Opened {clean.capitalize()} ({url}) on your PC screen!{shot_str}"
         return None
+
 
     # ─────────────────────────────────────────────────────────────────────────
     # 2. LOCAL APP LAUNCHING & CLOSING
@@ -144,28 +157,24 @@ class PCPilot:
                 matched = val
                 break
 
+        from tools.pc_tools import run_in_interactive_session, take_pc_screenshot
+        import time
+
         if matched:
             app_id_or_cmd, display_name, proc_name = matched
             self.last_launched_app = clean
             try:
                 if "!" in app_id_or_cmd or "Microsoft." in app_id_or_cmd or "Google." in app_id_or_cmd or "Chrome" in app_id_or_cmd:
-                    # Launch via shell:AppsFolder (Universal 100% reliable Windows 11 method)
-                    subprocess.Popen(
-                        ["powershell", "-NoProfile", "-NonInteractive", "-Command", f"Start-Process 'shell:AppsFolder\\{app_id_or_cmd}'"],
-                        shell=True,
-                    )
+                    run_in_interactive_session(f"start shell:AppsFolder\\{app_id_or_cmd}")
                 elif ":" in app_id_or_cmd:
-                    subprocess.Popen(
-                        ["powershell", "-NoProfile", "-NonInteractive", "-Command", f"Start-Process '{app_id_or_cmd}'"],
-                        shell=True,
-                    )
+                    run_in_interactive_session(f"start {app_id_or_cmd}")
                 else:
-                    subprocess.Popen(
-                        ["powershell", "-NoProfile", "-NonInteractive", "-Command", f"Start-Process {app_id_or_cmd}"],
-                        shell=True,
-                    )
+                    run_in_interactive_session(f"start {app_id_or_cmd}")
 
-                return f"🚀 Successfully launched {display_name} on your PC screen, Boss!"
+                time.sleep(1.5)
+                shot = take_pc_screenshot()
+                shot_str = f" Proof Screenshot: {shot}" if shot else ""
+                return f"🚀 Successfully launched {display_name} on your PC screen, Boss!{shot_str}"
             except Exception as ex:
                 return f"❌ Failed to launch {display_name}: {str(ex)}"
 
@@ -175,23 +184,24 @@ class PCPilot:
             f_name, f_appid = found
             self.last_launched_app = clean
             try:
-                subprocess.Popen(
-                    ["powershell", "-NoProfile", "-NonInteractive", "-Command", f"Start-Process 'shell:AppsFolder\\{f_appid}'"],
-                    shell=True,
-                )
-                return f"🚀 Found and launched '{f_name}' from Windows Start Menu on your PC, Boss!"
+                run_in_interactive_session(f"start shell:AppsFolder\\{f_appid}")
+                time.sleep(1.5)
+                shot = take_pc_screenshot()
+                shot_str = f" Proof Screenshot: {shot}" if shot else ""
+                return f"🚀 Found and launched '{f_name}' from Windows Start Menu on your PC, Boss!{shot_str}"
             except Exception as e:
                 return f"❌ Found '{f_name}' ({f_appid}) but launch failed: {str(e)}"
 
         # 4. Fallback execution & Honest Diagnostic Reporting
         try:
             self.last_launched_app = clean
-            subprocess.Popen(
-                ["powershell", "-NoProfile", "-NonInteractive", "-Command", f"Start-Process '{clean}'"],
-                shell=True,
-            )
-            return f"🚀 Dispatched launch command for '{app_name}' on your PC, Boss!"
+            run_in_interactive_session(f"start {clean}")
+            time.sleep(1.5)
+            shot = take_pc_screenshot()
+            shot_str = f" Proof Screenshot: {shot}" if shot else ""
+            return f"🚀 Dispatched launch command for '{app_name}' on your PC screen, Boss!{shot_str}"
         except Exception:
+
             return (
                 f"⚠️ Boss, '{app_name}' was not found in your Windows Start Menu (Get-StartApps) or standard executable path.\n\n"
                 f"Reason: The application is either not installed under that exact name or is located in a custom folder. "

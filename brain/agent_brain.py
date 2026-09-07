@@ -533,21 +533,125 @@ TOOLS_DEFINITION = [
                 "required": ["company", "role"]
             }
         }
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "get_sgc_billing_data",
+            "description": "Query Sri Ganapathi Colours (SGC) yarn dyeing billing database for latest bills, specific customer/party amounts (e.g. MSK Fabrics, Sowbhagiya, GAIA), or total pending ledger.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "customer_name": {"type": "string", "description": "Optional customer or party name to filter by (e.g. 'MSK Fabrics', 'Sowbhagiya', 'GAIA')."},
+                    "query": {"type": "string", "description": "Natural language query about SGC business bills or overdue."}
+                }
+            }
+        }
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "manage_memory",
+            "description": "Store or recall persistent user facts/notes, allocate project workspaces, or view all active memory allocations.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "action": {"type": "string", "enum": ["store_fact", "allocate_project", "check_allocations"], "description": "Action to perform: 'store_fact' to save a custom user fact/note, 'allocate_project' to allocate memory for a software project, or 'check_allocations' to view all persistent memory partitions."},
+                    "key": {"type": "string", "description": "Topic or key name for the fact (e.g. 'favourite_tech', 'friend_info')."},
+                    "value": {"type": "string", "description": "Content or details of the fact to store."},
+                    "project_name": {"type": "string", "description": "Project name when allocating project memory."}
+                },
+                "required": ["action"]
+            }
+        }
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "manage_cloud_server",
+            "description": "Check Render cloud production server health, sync memory between PC and cloud, or check 24/7 keep-alive status.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "action": {"type": "string", "enum": ["status", "sync_memory"], "description": "Action: 'status' to check cloud server health & uptime, or 'sync_memory' to sync local memory to cloud DB."}
+                },
+                "required": ["action"]
+            }
+    {
+        "type": "function",
+        "function": {
+            "name": "git_push_changes",
+            "description": "Autonomously stage all changes, commit with a professional message, and push directly to Mukil's AURA-OS GitHub repository without asking for credentials or repo URLs.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "commit_message": {
+                        "type": "string",
+                        "description": "Descriptive commit message (e.g. 'feat: physical execution engine and hardware vitals')."
+                    }
+                }
+            }
+        }
     }
 ]
+
+
+# Dynamically append tools registered via @aura_tool (e.g. system vitals, hardware, diagnosis)
+from tools.registry import registry
+from tools import system_tools
+
+for _schema in registry.get_schemas():
+    if not any(t.get("function", {}).get("name") == _schema["function"]["name"] for t in TOOLS_DEFINITION):
+        TOOLS_DEFINITION.append(_schema)
 
 class AgentBrain:
     def __init__(self):
         self.mem = MemoryManager()
         self.client = Groq(api_key=GROQ_API_KEY)
         self.model = "openai/gpt-oss-120b"
+        self.fast_model = "openai/gpt-oss-20b"
         self.router = IntentRouter()
         self.cognitive_router = CognitiveRouter()
         self.device_router = DevicePresenceRouter()
         self.swarm = SwarmOrchestrator()
         self.codeact_runner = CodeActCloudRunner()
 
+    def _chat_complete(self, messages, tools=None, tool_choice="auto", temperature=0.4, max_tokens=1000):
+        """Executes chat completion with seamless fallback to fast_model on 429 or 404."""
+        try:
+            return self.client.chat.completions.create(
+                model=self.model,
+                messages=messages,
+                tools=tools,
+                tool_choice=tool_choice,
+                temperature=temperature,
+                max_tokens=max_tokens
+            )
+        except Exception as err:
+            err_str = str(err).lower()
+            if "429" in err_str or "rate_limit" in err_str or "404" in err_str or "not found" in err_str:
+                logger.warning(f"Falling back to {self.fast_model} due to: {err}")
+                return self.client.chat.completions.create(
+                    model=self.fast_model,
+                    messages=messages,
+                    tools=tools,
+                    tool_choice=tool_choice,
+                    temperature=temperature,
+                    max_tokens=max_tokens
+                )
+            raise err
+
     def _execute_tool_sync(self, name: str, args: dict) -> str:
+        # Check central tool registry first
+        tool_def = registry.get_tool(name)
+        if tool_def:
+            res = tool_def.execute(**args)
+            if res["success"]:
+                if isinstance(res["result"], (dict, list)):
+                    return json.dumps(res["result"], indent=2)
+                return str(res["result"])
+            return f"Tool {name} execution error: {res['error']}"
+
         if name == "auto_apply_job":
             return pc_tools.auto_apply_job(
                 company=args.get("company", "Tech Company"),
@@ -635,8 +739,64 @@ class AgentBrain:
             tailor = ATSResumeTailorAgent()
             res = tailor.tailor_resume_for_job(args.get("company", "Tech Company"), args.get("role", "Software Engineer"), args.get("jd_text", ""))
             return json.dumps(res, indent=2)
+        elif name == "get_sgc_billing_data":
+            from app.agents.swarm.sgc_executive_agent import SGCExecutiveAgent
+            from app.agents.swarm.base_swarm_agent import SwarmTaskMessage
+            agent = SGCExecutiveAgent()
+            msg = SwarmTaskMessage(
+                task_id="tool_sgc",
+                sender="AgentBrain",
+                recipient="SGCExecutive",
+                action="GET_LATEST_BILL",
+                payload={"query": args.get("query", ""), "customer": args.get("customer_name", "")}
+            )
+            res = _run_async_safely(agent.process_task(msg))
+            return res.result.get("summary", "No billing data found.") if res.result else "No billing data found."
+        elif name == "manage_memory":
+            from app.agents.swarm.memory_vault_agent import MemoryVaultAgent
+            from app.agents.swarm.base_swarm_agent import SwarmTaskMessage
+            agent = MemoryVaultAgent()
+            act = args.get("action", "check_allocations").lower()
+            if "store" in act or "save" in act:
+                action = "STORE_FACT"
+            elif "project" in act or "allocate" in act:
+                action = "ALLOCATE_PROJECT_MEMORY"
+            else:
+                action = "CONFIRM_MEMORY_STATUS"
+            msg = SwarmTaskMessage(
+                task_id="tool_mem",
+                sender="AgentBrain",
+                recipient="MemoryVault",
+                action=action,
+                payload=args
+            )
+            res = _run_async_safely(agent.process_task(msg))
+            return res.result.get("summary", "Memory updated.") if res.result else "Memory updated."
+        elif name == "manage_cloud_server":
+            from app.agents.swarm.server_agent import ServerAgent
+            from app.agents.swarm.base_swarm_agent import SwarmTaskMessage
+            agent = ServerAgent()
+            act = args.get("action", "status").lower()
+            action = "SYNC_MEMORY" if "sync" in act else "CHECK_SERVER_STATUS"
+            msg = SwarmTaskMessage(
+                task_id="tool_srv",
+                sender="AgentBrain",
+                recipient="ServerAgent",
+                action=action,
+                payload=args
+            )
+            res = _run_async_safely(agent.process_task(msg))
+            return res.result.get("summary", "Server status checked.") if res.result else "Server status checked."
+        elif name == "git_push_changes":
+            msg = args.get("commit_message") or "feat(core): enhance physical interactive execution bridge and hardware vitals engine"
+            subprocess.run(["git", "add", "."], capture_output=True, text=True)
+            c_res = subprocess.run(["git", "commit", "-m", msg], capture_output=True, text=True)
+            p_res = subprocess.run(["git", "push", "origin", "main"], capture_output=True, text=True)
+            out = f"Git Push Output:\nCommit: {c_res.stdout or c_res.stderr}\nPush: {p_res.stdout or p_res.stderr}"
+            return out
         else:
             return f"Unknown tool: {name}"
+
 
     def execute_tool(self, name: str, args: dict) -> str:
         logger.info(f"Executing tool: {name} with args: {args}")
@@ -668,9 +828,6 @@ class AgentBrain:
             + sys_context
         )
 
-        route = self.cognitive_router.route(user_message)
-        logger.info(f"Cognitive track routed: {route.track} | Swarm Agent: {route.target_swarm_agent}")
-
         # Assemble Multi-Turn Messages with Recent Conversation History
         messages = [{"role": "system", "content": system_prompt}]
         recent_history = self.mem.get_recent_conversations(limit=6)
@@ -680,145 +837,9 @@ class AgentBrain:
         messages.append({"role": "user", "content": user_message})
 
         try:
-            # ── TRACK 1: FAST_CONVERSATION (Sub-500ms Instant Reply) ─────────
-            if route.track == "FAST_CONVERSATION":
-                res = self.client.chat.completions.create(
-                    model=self.model,
-                    messages=messages,
-                    temperature=0.7,
-                    max_tokens=800
-                )
-                reply = res.choices[0].message.content or "Done maapla!"
-                self.mem.append_conversation(user_name, user_message)
-                self.mem.append_conversation("JARVIS", reply)
-                self.mem.log_task("CHAT_RESPONSE", f"[FAST_CONVO] User: {user_message[:60]}... | Reply: {reply[:60]}...")
-                return reply
-
-            # ── TRACK 2: STATUS_OR_MEMORY_QUERY ──────────────────────────────
-            elif route.track == "STATUS_OR_MEMORY_QUERY":
-                import asyncio
-                agent_name = route.target_swarm_agent or "MemoryVault"
-                msg_lower = user_message.lower()
-                if agent_name == "SGCExecutive":
-                    action = "GET_LATEST_BILL" if any(w in msg_lower for w in ["last bill", "bill number", "latest bill", "bill no", "poitu", "evalo", "bill"]) else "CHECK_OVERDUE"
-                elif agent_name == "ServerAgent":
-                    payload = {"query": user_message}
-                    if any(w in msg_lower for w in ["sync", "cloud sync"]):
-                        action = "SYNC_MEMORY"
-                    elif any(w in msg_lower for w in ["allocate", "memory", "storage", "pool", "nodes"]):
-                        action = "ALLOCATE_SERVER_MEMORY"
-                    else:
-                        action = "CHECK_SERVER_STATUS"
-                else:
-                    payload = {"query": user_message}
-                    if any(w in msg_lower for w in ["allocate project", "project memory", "project-ku memory", "allocate memory for"]):
-                        action = "ALLOCATE_PROJECT_MEMORY"
-                        import re
-                        cleaned = re.sub(r'^(?:allocate|create|set\s*up)\s+(?:project\s+memory|project|memory)\s*(?:for)?\s*', '', user_message, flags=re.IGNORECASE).strip()
-                        proj_name = cleaned.split(" with ")[0].split(" using ")[0].strip() if cleaned else "New_Autonomous_Project"
-                        payload["project_name"] = proj_name
-                    elif any(w in msg_lower for w in ["note pannu", "note panniko", "note panni", "note down", "store this", "store panni", "store pannu", "remember this", "save this", "save note", "save data", "idha store", "idha save", "idha note"]):
-                        action = "STORE_FACT"
-                        payload["fact"] = user_message
-                    elif any(w in msg_lower for w in ["memory", "allocate", "allocation", "store", "remember", "save"]):
-                        action = "CONFIRM_MEMORY_STATUS"
-                    else:
-                        action = "QUERY_TASK_STATUS"
-                
-                swarm_res = _run_async_safely(self.swarm.dispatch(agent_name, action, payload))
-                summary = swarm_res.result.get("summary", "Status retrieved successfully.") if swarm_res.result else "All tasks tracked in persistent memory."
-                reply = summary
-                self.mem.append_conversation(user_name, user_message)
-                self.mem.append_conversation("JARVIS", reply)
-                return reply
-
-            # ── TRACK 3: DEVICE_PRESENTATION & PHYSICAL PC ACTION ────────────
-            elif route.track == "DEVICE_PRESENTATION":
-                msg_lower = user_message.lower()
-                if "notepad" in msg_lower:
-                    if any(w in msg_lower for w in ["close", "moodu", "kill", "exit"]):
-                        action = "EXECUTE_POWERSHELL"
-                        payload = {"command": "Stop-Process -Name notepad -Force -ErrorAction SilentlyContinue", "summary": "Done Boss! Notepad closed on your laptop screen."}
-                    else:
-                        action = "EXECUTE_POWERSHELL"
-                        payload = {"command": "Start-Process notepad", "summary": "🚀 Successfully launched Notepad on your laptop screen, Boss!"}
-                elif any(w in msg_lower for w in ["youtube", "play", "song", "video", "siddhu", "vlog"]):
-                    action = "PLAY_MEDIA"
-                    payload = {"query": user_message}
-                elif any(w in msg_lower for w in ["screenshot", "screen proof", "screen capture"]):
-                    action = "TAKE_SCREENSHOT"
-                    payload = {}
-                elif any(w in msg_lower for w in ["battery", "charge"]):
-                    action = "GET_BATTERY"
-                    payload = {}
-                elif any(w in msg_lower for w in ["lock", "sleep"]):
-                    action = "LOCK_PC"
-                    payload = {}
-                elif any(w in msg_lower for w in ["volume", "sound", "mute"]):
-                    import re
-                    digits = re.findall(r'\b\d+\b', msg_lower)
-                    lvl = int(digits[0]) if digits else (0 if "mute" in msg_lower else 50)
-                    action = "SET_VOLUME"
-                    payload = {"level": lvl}
-                elif "brightness" in msg_lower:
-                    import re
-                    digits = re.findall(r'\b\d+\b', msg_lower)
-                    lvl = int(digits[0]) if digits else 80
-                    action = "SET_BRIGHTNESS"
-                    payload = {"level": lvl}
-                elif "calc" in msg_lower:
-                    action = "EXECUTE_POWERSHELL"
-                    payload = {"command": "Start-Process calc", "summary": "🚀 Calculator opened on your laptop screen, Boss!"}
-                elif "whatsapp" in msg_lower:
-                    action = "EXECUTE_POWERSHELL"
-                    payload = {"command": "start whatsapp:", "summary": "🚀 WhatsApp desktop opened on your laptop screen, Boss!"}
-                elif "chrome" in msg_lower or "browser" in msg_lower:
-                    action = "OPEN_ON_SCREEN"
-                    payload = {"target": "https://google.com"}
-                else:
-                    action = "OPEN_ON_SCREEN"
-                    payload = {"target": user_message}
-
-                swarm_res = _run_async_safely(self.swarm.dispatch("PCPilot", action, payload))
-                if swarm_res.status == "COMPLETED" and swarm_res.result:
-                    reply = swarm_res.result.get("summary", "PC command executed successfully!")
-                    self.mem.append_conversation(user_name, user_message)
-                    self.mem.append_conversation("JARVIS", reply)
-                    return reply
-                else:
-                    pres_res = _run_async_safely(self.device_router.route_presentation(user_message, user_name=user_name))
-                    self.mem.append_conversation(user_name, user_message)
-                    self.mem.append_conversation("JARVIS", pres_res.status_message)
-                    return pres_res.status_message
-
-            # ── TRACK 4: AUTONOMOUS_HEAVY_TASK via Swarm ─────────────────────
-            elif route.track == "AUTONOMOUS_HEAVY_TASK" and route.target_swarm_agent in ["WebScout", "PlacementHunter", "SGCExecutive", "Antigravity"]:
-                if route.target_swarm_agent == "Antigravity":
-                    action = "BUILD_PROJECT" if any(w in user_message.lower() for w in ["build", "scaffold", "create", "project", "app"]) else ("RUN_TERMINAL" if any(w in user_message.lower() for w in ["cmd", "command", "terminal", "powershell", "run"]) else "GENERAL_ENGINEERING")
-                    swarm_payload = {"description": user_message, "project_name": "autonomous_project", "command": user_message}
-                elif route.target_swarm_agent == "WebScout":
-                    action = "SCRAPE_MILLS" if "mill" in user_message.lower() else ("SCRAPE_JOBS" if any(w in user_message.lower() for w in ["job", "opening", "fresher"]) else "SCRAPE_JOBS")
-                    swarm_payload = {"query": user_message}
-                elif route.target_swarm_agent == "PlacementHunter":
-                    action = "TAILOR_RESUME"
-                    swarm_payload = {"company": "Zoho", "role": "AI Engineer", "query": user_message}
-                else:
-                    action = "CHECK_OVERDUE"
-                    swarm_payload = {"query": user_message}
-
-                swarm_res = _run_async_safely(self.swarm.dispatch(route.target_swarm_agent, action, swarm_payload))
-                if swarm_res.status == "COMPLETED" and swarm_res.result:
-                    summary = swarm_res.result.get("summary", "Task executed successfully by Swarm!")
-                    reply = f"✅ *Task Executed by {route.target_swarm_agent}:*\n\n{summary}\n\nMaapla, output verified & saved in Distributed Mesh!"
-                    self.mem.append_conversation(user_name, user_message)
-                    self.mem.append_conversation("JARVIS", reply)
-                    self.mem.log_task("SWARM_TASK_COMPLETED", summary, {"agent": route.target_swarm_agent})
-                    return reply
-
-            # For SYNC_ACTION and ASYNC_PROCESS -> Run Tool-calling loop
+            # ── DYNAMIC THINKING & ACTION (ReAct) LOOP ─────────────────────────
             for turn in range(5):
-                response = self.client.chat.completions.create(
-                    model=self.model,
+                response = self._chat_complete(
                     messages=messages,
                     tools=TOOLS_DEFINITION,
                     tool_choice="auto",
@@ -858,8 +879,7 @@ class AgentBrain:
                     })
 
             # If reached max loop turns, call once more with tools to get final text
-            final_res = self.client.chat.completions.create(
-                model=self.model,
+            final_res = self._chat_complete(
                 messages=messages,
                 tools=TOOLS_DEFINITION,
                 tool_choice="auto",
@@ -867,13 +887,15 @@ class AgentBrain:
                 max_tokens=1000
             )
             final_reply = final_res.choices[0].message.content or "Completed task maapla!"
+            self.mem.append_conversation(user_name, user_message)
+            self.mem.append_conversation("JARVIS", final_reply)
             return final_reply
 
         except Exception as e:
             logger.error(f"Error in agent processing: {e}")
             try:
                 fallback_res = self.client.chat.completions.create(
-                    model="openai/gpt-oss-120b",
+                    model=self.fast_model,
                     messages=[
                         {"role": "system", "content": "You are JARVIS. Reply in friendly Tamil-Tanglish."},
                         {"role": "user", "content": user_message}
@@ -881,9 +903,13 @@ class AgentBrain:
                     temperature=0.6,
                     max_tokens=500
                 )
-                return fallback_res.choices[0].message.content or "Done maapla!"
+                fb_reply = fallback_res.choices[0].message.content or "Done maapla!"
+                self.mem.append_conversation(user_name, user_message)
+                self.mem.append_conversation("JARVIS", fb_reply)
+                return fb_reply
             except Exception:
                 return f"Jarvis Brain Error: {str(e)}"
+
 
 if __name__ == "__main__":
     brain = AgentBrain()

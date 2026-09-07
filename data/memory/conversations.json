@@ -1,29 +1,5 @@
 [
   {
-    "timestamp": "2026-08-28T01:31:21.181742+00:00",
-    "sender": "Mukil",
-    "channel": "Telegram",
-    "text": "notepad-a close pannu"
-  },
-  {
-    "timestamp": "2026-08-28T01:31:21.234782+00:00",
-    "sender": "JARVIS",
-    "channel": "Telegram",
-    "text": "Closed notepad, Boss.\n\nClosed notepad, Boss.\n\nClosed notepad, Boss.\n\nClosed notepad, Boss."
-  },
-  {
-    "timestamp": "2026-08-28T01:31:21.346748+00:00",
-    "sender": "Mukil",
-    "channel": "Telegram",
-    "text": "Explain TCP vs UDP"
-  },
-  {
-    "timestamp": "2026-08-28T01:31:21.375764+00:00",
-    "sender": "JARVIS",
-    "channel": "Telegram",
-    "text": "TCP is connection-oriented while UDP is connectionless, Boss!"
-  },
-  {
     "timestamp": "2026-08-28T01:34:30.603192+00:00",
     "sender": "Mukil",
     "channel": "Telegram",
@@ -595,6 +571,30 @@
   },
   {
     "timestamp": "2026-09-06T01:19:36.322753+00:00",
+    "sender": "JARVIS",
+    "channel": "Telegram",
+    "text": "TCP is connection-oriented while UDP is connectionless, Boss!"
+  },
+  {
+    "timestamp": "2026-09-06T01:38:02.836769+00:00",
+    "sender": "Mukil",
+    "channel": "Telegram",
+    "text": "notepad-a close pannu"
+  },
+  {
+    "timestamp": "2026-09-06T01:38:02.872969+00:00",
+    "sender": "JARVIS",
+    "channel": "Telegram",
+    "text": "Closed notepad, Boss."
+  },
+  {
+    "timestamp": "2026-09-06T01:38:02.908763+00:00",
+    "sender": "Mukil",
+    "channel": "Telegram",
+    "text": "Explain TCP vs UDP"
+  },
+  {
+    "timestamp": "2026-09-06T01:38:02.924621+00:00",
     "sender": "JARVIS",
     "channel": "Telegram",
     "text": "TCP is connection-oriented while UDP is connectionless, Boss!"

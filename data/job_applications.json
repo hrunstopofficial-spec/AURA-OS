@@ -1,5 +1,55 @@
 [
   {
+    "application_id": "job_7fd6956f",
+    "company": "Postman",
+    "role": "AI Engineer",
+    "apply_url": "https://www.postman.com/company/careers/",
+    "resume_link": "https://drive.google.com/file/d/1TpyzV7OGEf-YQfGLUpusAI5cDDvF1kAJ/view?usp=drive_link",
+    "applied_at": "2026-09-06T01:38:04.724222+00:00",
+    "status": "APPLIED",
+    "notes": "I combine deep full-stack engineering with modern Agentic AI workflows to deliver resilient, production-ready solutions faster than traditional cycles."
+  },
+  {
+    "application_id": "job_df6602e2",
+    "company": "Swiggy",
+    "role": "AI Engineer",
+    "apply_url": "https://careers.swiggy.com/",
+    "resume_link": "https://drive.google.com/file/d/1TpyzV7OGEf-YQfGLUpusAI5cDDvF1kAJ/view?usp=drive_link",
+    "applied_at": "2026-09-06T01:38:04.570088+00:00",
+    "status": "APPLIED",
+    "notes": "I combine deep full-stack engineering with modern Agentic AI workflows to deliver resilient, production-ready solutions faster than traditional cycles."
+  },
+  {
+    "application_id": "job_158c7811",
+    "company": "Freshworks",
+    "role": "AI Engineer",
+    "apply_url": "https://www.freshworks.com/company/careers/",
+    "resume_link": "https://drive.google.com/file/d/1TpyzV7OGEf-YQfGLUpusAI5cDDvF1kAJ/view?usp=drive_link",
+    "applied_at": "2026-09-06T01:38:04.403152+00:00",
+    "status": "APPLIED",
+    "notes": "I combine deep full-stack engineering with modern Agentic AI workflows to deliver resilient, production-ready solutions faster than traditional cycles."
+  },
+  {
+    "application_id": "job_4e09ed5e",
+    "company": "Zoho",
+    "role": "AI Engineer",
+    "apply_url": "https://www.zoho.com/careers/",
+    "resume_link": "https://drive.google.com/file/d/1TpyzV7OGEf-YQfGLUpusAI5cDDvF1kAJ/view?usp=drive_link",
+    "applied_at": "2026-09-06T01:38:04.243668+00:00",
+    "status": "APPLIED",
+    "notes": "I combine deep full-stack engineering with modern Agentic AI workflows to deliver resilient, production-ready solutions faster than traditional cycles."
+  },
+  {
+    "application_id": "job_31c5af17",
+    "company": "Zoho",
+    "role": "AI Developer",
+    "apply_url": "https://www.zoho.com/careers/",
+    "resume_link": "https://drive.google.com/file/d/1TpyzV7OGEf-YQfGLUpusAI5cDDvF1kAJ/view?usp=drive_link",
+    "applied_at": "2026-09-06T01:38:03.995201+00:00",
+    "status": "APPLIED",
+    "notes": "I combine deep full-stack engineering with modern Agentic AI workflows to deliver resilient, production-ready solutions faster than traditional cycles."
+  },
+  {
     "application_id": "job_d858f62a",
     "company": "Postman",
     "role": "AI Engineer",

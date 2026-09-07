@@ -79,7 +79,9 @@ logs/
 tmp/
 temp/
 storage/screenshots/
+storage/*.bat
 storage/uploads/
+
 storage/tailored_resumes/
 storage/scratch/
 .system_generated/
