@@ -577,10 +577,13 @@ TOOLS_DEFINITION = [
                 },
                 "required": ["action"]
             }
+        }
+    },
     {
         "type": "function",
         "function": {
             "name": "git_push_changes",
+
             "description": "Autonomously stage all changes, commit with a professional message, and push directly to Mukil's AURA-OS GitHub repository without asking for credentials or repo URLs.",
             "parameters": {
                 "type": "object",
