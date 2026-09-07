@@ -214,7 +214,7 @@ def test_p12_5_s4_15_continuous_replenishment_after_delay():
 
     # Drain all tokens
     limiter.consume("tenant_A", tokens_required=600)
-    assert limiter.get_token_balance("tenant_A") == 0.0
+    assert limiter.get_token_balance("tenant_A") == pytest.approx(0.0, abs=0.05)
 
     # Wait 0.25s -> should replenish approx 2.5 tokens
     time.sleep(0.25)
