@@ -18,10 +18,20 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from app.tools.agent_brain import AutonomousAgentBrain
 
-logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(name)s: %(message)s")
+os.makedirs(os.path.join(os.path.dirname(os.path.abspath(__file__)), "logs"), exist_ok=True)
+log_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), "logs", "pc_bridge_worker.log")
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
+    handlers=[
+        logging.StreamHandler(sys.stdout),
+        logging.FileHandler(log_file, encoding="utf-8")
+    ]
+)
 logger = logging.getLogger("PCWorkerClient")
 
-CLOUD_SERVER_URL = os.getenv("CLOUD_SERVER_URL", "ws://localhost:8000/api/v1/bridge/ws")
+CLOUD_SERVER_URL = os.getenv("CLOUD_SERVER_URL", "wss://aura-os-n6n3.onrender.com/api/v1/bridge/ws")
 BRIDGE_SECRET = os.getenv("PC_BRIDGE_SECRET", "mukil-aura-pc-bridge-secret-2026")
 WORKER_ID = os.getenv("WORKER_ID", "mukil_primary_pc")
 

@@ -33,6 +33,25 @@ async def health_check() -> HealthResponse:
     )
 
 
+@router.get("/cloud-vitals")
+async def cloud_vitals():
+    """Diagnostic check to verify which cloud environment variables are configured on Render."""
+    import os
+    tg_token = os.getenv("TELEGRAM_BOT_TOKEN", "")
+    groq_key = os.getenv("GROQ_API_KEY", "")
+    gemini_key = os.getenv("GEMINI_API_KEY", "")
+
+    return {
+        "status": "online",
+        "telegram_bot_token_present": bool(tg_token),
+        "telegram_bot_token_masked": f"{tg_token[:6]}...{tg_token[-4:]}" if tg_token else "NOT_SET",
+        "groq_api_key_present": bool(groq_key),
+        "gemini_api_key_present": bool(gemini_key),
+        "environment": os.getenv("ENVIRONMENT", "unknown"),
+        "render_cloud": bool(os.getenv("RENDER")),
+    }
+
+
 @router.get("/system-diagnosis")
 async def system_diagnosis():
     """Live AURA-OS Hardware Vitals & Health Diagnosis."""
