@@ -25,8 +25,8 @@
   "completed_sprints": [
     {
       "sprint_name": "Capgemini Placement Drive Sprint",
-      "start_date": "2026-09-05",
-      "expiry_date": "2026-09-04",
+      "start_date": "2026-09-07",
+      "expiry_date": "2026-09-06",
       "duration_days": 7,
       "focus_topics": [
         "Capgemini Pseudo Code",
@@ -48,8 +48,8 @@
         }
       },
       "status": "COMPLETED",
-      "completed_at": "2026-09-05 22:32:39"
+      "completed_at": "2026-09-07 20:49:09"
     }
   ],
-  "last_checked": "2026-09-05 22:32:39"
+  "last_checked": "2026-09-07 20:49:09"
 }

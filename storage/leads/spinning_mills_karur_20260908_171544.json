@@ -1,0 +1,60 @@
+{
+  "district": "Karur",
+  "scraped_at": "2026-09-08T17:15:44.489021+00:00",
+  "data_origin": "live_web_verified",
+  "count": 5,
+  "mills": [
+    {
+      "name": "Karur Srinidhi Yaarn Mill (P) Ltd",
+      "district": "Karur",
+      "location": "34/97A, L.G.B. Nagar, Karur- 639002",
+      "phone": "4324 248325",
+      "contact_person": "Management / Executive",
+      "source_url": "https://commoditiesindia.net/listing/karur-srinidhi-yaarn-mill-p-ltd/",
+      "data_source": "commoditiesindia_live_crawl",
+      "status": "active"
+    },
+    {
+      "name": "Atlas Textile Export (P) Ltd",
+      "district": "Karur",
+      "location": "\"Atlas Chambers\", 29 J, Pugalur Road, Karur- 639001",
+      "phone": "4324 274303, 274404",
+      "contact_person": "Management / Executive",
+      "source_url": "https://commoditiesindia.net/listing/atlas-textile-export-p-ltd/",
+      "data_source": "commoditiesindia_live_crawl",
+      "status": "active"
+    },
+    {
+      "name": "Karur Cotton Mills (P) Ltd",
+      "district": "Karur",
+      "location": "20/1, Bharathi Nagar West, Vaiyapuri Nagar Post, Karur 639002, Tamil Nadu",
+      "phone": "+91 9944457300",
+      "contact_person": "Managing Director",
+      "source_url": "http://kcmpl.com/",
+      "data_source": "official_corporate_site_live",
+      "status": "active"
+    },
+    {
+      "name": "Lakshmi Textile Mills",
+      "district": "Karur",
+      "location": "11/A, Bharathi Nagar West, Vaiyapuri Nagar (Po) Karur, Tamil Nadu 639 002",
+      "phone": "Check source listing",
+      "email": "ltm.mills@gmail.com",
+      "contact_person": "Vignesh (Director)",
+      "source_url": "https://lakshmitextilemills.com/",
+      "data_source": "official_corporate_site_live",
+      "status": "active"
+    },
+    {
+      "name": "MRC Mills Private Limited (KC Groups)",
+      "district": "Karur",
+      "location": "Unit-1 Chinnandan Kovil Road, Karur-639001, Tamil Nadu",
+      "phone": "Check source listing",
+      "email": "mrccud@kcgroups.in",
+      "contact_person": "General Manager",
+      "source_url": "https://kcgroups.in/mrcmills/",
+      "data_source": "official_corporate_site_live",
+      "status": "active"
+    }
+  ]
+}

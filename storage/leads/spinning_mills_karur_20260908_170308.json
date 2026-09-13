@@ -1,0 +1,28 @@
+{
+  "district": "Karur",
+  "scraped_at": "2026-09-08T17:03:08.038584+00:00",
+  "data_origin": "local_cache_fallback",
+  "count": 2,
+  "mills": [
+    {
+      "name": "Karur Srinidhi Yaarn Mill (P) Ltd",
+      "district": "Karur",
+      "location": "34/97A, L.G.B. Nagar, Karur - 639002",
+      "phone": "04324-248325",
+      "source_url": "https://commoditiesindia.net/listing/karur-srinidhi-yaarn-mill-p-ltd/",
+      "contact_person": "R. Janardhanam",
+      "data_source": "commoditiesindia_verified_directory",
+      "status": "active"
+    },
+    {
+      "name": "Chettinad Spinning & Weaving Mills",
+      "district": "Karur",
+      "location": "Puliyur CF, Karur, Tamil Nadu 639114",
+      "phone": "04324-251200",
+      "source_url": "https://www.indianyellowpages.com/karur/chettinad-spinning-mills",
+      "contact_person": "General Manager",
+      "data_source": "yellowpages_verified_directory",
+      "status": "active"
+    }
+  ]
+}

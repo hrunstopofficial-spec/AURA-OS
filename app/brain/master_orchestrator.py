@@ -73,6 +73,66 @@ class MasterOrchestrator:
             py_code = f"import urllib.request; print(f'Fetched {{len(urllib.request.urlopen(\"{url}\").read())}} bytes')"
             res = await self.codeact_runner.execute_python_code(py_code)
             return {"status": "ok", "bytes": res.stdout}
+
+        # ─── OS GUI & COMPUTER USE ACTIONS (Vision + Mouse + Keyboard) ───
+        elif tool_name == "os_view_screen":
+            from tools.fast_os_controller import see_screen
+            query = args.get("query", "Describe what is on this screen.")
+            desc = see_screen(query)
+            return {"status": "ok", "screen_description": desc}
+
+        elif tool_name == "os_click_element":
+            from tools.fast_os_controller import click_element_by_text, mouse_click
+            element = args.get("element")
+            x = args.get("x")
+            y = args.get("y")
+            if element:
+                clicked = click_element_by_text(element)
+                if not clicked:
+                    return {"status": "error", "error": f"Element '{element}' not found on screen"}
+                return {"status": "ok", "clicked_element": element}
+            elif x is not None and y is not None:
+                mouse_click(x=x, y=y)
+                return {"status": "ok", "clicked_coords": (x, y)}
+            return {"status": "error", "error": "No element or coordinates provided"}
+
+        elif tool_name == "os_type_text":
+            from tools.fast_os_controller import type_human, type_instant
+            text = args.get("text", "")
+            mode = args.get("mode", "human")
+            if mode == "instant":
+                type_instant(text)
+            else:
+                type_human(text)
+            return {"status": "ok", "typed_length": len(text)}
+
+        elif tool_name == "os_hotkey":
+            from tools.fast_os_controller import hotkey
+            keys = args.get("keys", [])
+            if keys:
+                hotkey(*keys)
+                return {"status": "ok", "hotkey": keys}
+            return {"status": "error", "error": "No keys provided for hotkey"}
+
+        # ─── SAGA COMPENSATING ROLLBACK ACTIONS ───
+        elif tool_name == "rollback_undo_typing":
+            from tools.fast_os_controller import hotkey, press_key
+            # Select all and delete text to roll back accidental/failed input
+            hotkey("ctrl", "a")
+            press_key("backspace")
+            return {"status": "rolled_back", "action": "cleared_input_field"}
+
+        elif tool_name == "rollback_close_window":
+            from tools.fast_os_controller import hotkey, press_key
+            press_key("esc")
+            hotkey("ctrl", "w")
+            return {"status": "rolled_back", "action": "closed_active_tab"}
+
+        elif tool_name == "rollback_escape":
+            from tools.fast_os_controller import press_key
+            press_key("esc")
+            return {"status": "rolled_back", "action": "pressed_escape"}
+
         else:
             return {"status": "ok", "tool": tool_name}
 

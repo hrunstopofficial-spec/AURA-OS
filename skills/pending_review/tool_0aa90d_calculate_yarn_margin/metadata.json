@@ -1,0 +1,9 @@
+{
+  "tool_name": "calculate_yarn_margin",
+  "description": "Calculates spinning mill yarn profit margins based on count and current rate",
+  "created_by_task": "task_margin_calc_88",
+  "proposed_at": "2026-09-09T01:16:16Z",
+  "status": "PENDING_HUMAN_REVIEW",
+  "reviewed_by_user": false,
+  "tool_file": "C:\\Users\\mukil\\jarvis-core\\skills\\pending_review\\tool_0aa90d_calculate_yarn_margin\\calculate_yarn_margin.py"
+}

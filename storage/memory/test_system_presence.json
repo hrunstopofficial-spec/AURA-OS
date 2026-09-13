@@ -1,0 +1,10 @@
+{
+  "agent_id": "mukil_laptop_worker_01",
+  "status": "online",
+  "is_online": true,
+  "battery_percent": 91,
+  "queue_depth": 1,
+  "vitals_summary": null,
+  "last_seen_timestamp": "2026-09-09T01:19:57.808446+00:00",
+  "recorded_at": "2026-09-09T01:19:57.808446+00:00"
+}

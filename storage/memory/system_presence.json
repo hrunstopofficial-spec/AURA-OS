@@ -1,0 +1,10 @@
+{
+  "agent_id": "mukil_laptop_worker_01",
+  "status": "online",
+  "is_online": true,
+  "battery_percent": 100,
+  "queue_depth": 0,
+  "vitals_summary": "Windows Node Fully Operational & Synced with Antigravity",
+  "last_seen_timestamp": "2026-09-12T22:32:00.000000+00:00",
+  "recorded_at": "2026-09-12T22:32:00.000000+00:00"
+}

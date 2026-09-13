@@ -1,0 +1,38 @@
+{
+  "district": "Tirupur",
+  "scraped_at": "2026-09-08T17:15:59.717887+00:00",
+  "data_origin": "live_web_verified",
+  "count": 3,
+  "mills": [
+    {
+      "name": "Amarjothi Spinning Mills Ltd",
+      "district": "Tirupur",
+      "location": "Amarjothi House No. 157, Kumaran Road, Tirupur- 641601",
+      "phone": "421 2201980, 2201983",
+      "contact_person": "Management / Executive",
+      "source_url": "https://commoditiesindia.net/listing/amarjothi-spinning-mills-ltd/",
+      "data_source": "commoditiesindia_live_crawl",
+      "status": "active"
+    },
+    {
+      "name": "Arunachala Spinning Mills India (P) Ltd",
+      "district": "Tirupur",
+      "location": "32, Erukkadu 4th Street, Karuvampalayam, Tirupur- 641604",
+      "phone": "421 2244161, 226612",
+      "contact_person": "Management / Executive",
+      "source_url": "https://commoditiesindia.net/listing/arunachala-spinning-mills-india-p-ltd/",
+      "data_source": "commoditiesindia_live_crawl",
+      "status": "active"
+    },
+    {
+      "name": "Aswin Textiles (P) Ltd",
+      "district": "Tirupur",
+      "location": "P.B.No. 279, No.43, Mettupalayam Extension, PN Road, Tirupur- 641602",
+      "phone": "421 2475500, 4258222801",
+      "contact_person": "Management / Executive",
+      "source_url": "https://commoditiesindia.net/listing/aswin-textiles-p-ltd/",
+      "data_source": "commoditiesindia_live_crawl",
+      "status": "active"
+    }
+  ]
+}

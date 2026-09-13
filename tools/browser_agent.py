@@ -1,4 +1,4 @@
-﻿import os
+import os
 import sys
 import json
 import time
@@ -175,6 +175,93 @@ class AutonomousBrowserAgent:
         if filled_fields:
             return f"✅ Form on {url} successfully auto-filled with fields:\n• " + "\n• ".join(filled_fields)
         return f"Navigated to {url}. No standard matching form fields were detected."
+
+    def execute_web_mission(self, url: str, mission_plan: dict, headless: bool = False) -> dict:
+        """
+        Executes a complex, multi-page autonomous browser mission.
+        Handles: Input fields, Dropdowns, Radio buttons, File uploads, Pagination ('Next' / 'Submit'), and Proof Screenshots.
+        Works identically in Headless mode (Server) and Headed mode (Laptop).
+        """
+        if not url.startswith("http"):
+            url = "https://" + url
+
+        report = {
+            "url": url,
+            "status": "RUNNING",
+            "steps_completed": [],
+            "screenshot": None,
+            "error": None
+        }
+
+        with sync_playwright() as p:
+            try:
+                context = self._get_context(p, headless=headless)
+                page = context.pages[0] if context.pages else context.new_page()
+                page.goto(url, timeout=45000)
+                page.wait_for_load_state("networkidle", timeout=15000)
+                time.sleep(2)
+
+                # Execute sequential steps from mission plan
+                steps = mission_plan.get("steps", [])
+                for i, step in enumerate(steps, 1):
+                    action = step.get("action")
+                    desc = step.get("description", f"Step {i}")
+
+                    if action == "click":
+                        selector = step.get("selector")
+                        text = step.get("text")
+                        if selector:
+                            page.locator(selector).first.click(timeout=8000)
+                        elif text:
+                            page.get_by_text(text, exact=False).first.click(timeout=8000)
+                        report["steps_completed"].append(f"Clicked: {desc}")
+
+                    elif action == "fill":
+                        selector = step.get("selector")
+                        value = step.get("value")
+                        if selector:
+                            loc = page.locator(selector).first
+                            loc.fill(str(value), timeout=8000)
+                            report["steps_completed"].append(f"Filled {desc} -> {str(value)[:30]}...")
+
+                    elif action == "upload_file":
+                        file_path = step.get("file_path")
+                        selector = step.get("selector", "input[type='file']")
+                        if os.path.exists(file_path):
+                            page.set_input_files(selector, file_path, timeout=10000)
+                            report["steps_completed"].append(f"Uploaded file: {os.path.basename(file_path)}")
+                        else:
+                            report["steps_completed"].append(f"Skipped upload (file not found: {file_path})")
+
+                    elif action == "press":
+                        key = step.get("key", "Enter")
+                        page.keyboard.press(key)
+                        report["steps_completed"].append(f"Pressed key: {key}")
+
+                    elif action == "wait":
+                        seconds = step.get("seconds", 2)
+                        time.sleep(seconds)
+
+                    time.sleep(0.8)
+
+                # Capture final visual proof screenshot
+                import tempfile
+                proof_path = os.path.join(tempfile.gettempdir(), f"mission_proof_{int(time.time())}.png")
+                page.screenshot(path=proof_path, full_page=False)
+                report["screenshot"] = proof_path
+                report["status"] = "SUCCESS"
+                time.sleep(3)
+                context.close()
+
+            except Exception as e:
+                report["status"] = "ERROR"
+                report["error"] = str(e)
+                try:
+                    context.close()
+                except Exception:
+                    pass
+
+        return report
 
 if __name__ == "__main__":
     agent = AutonomousBrowserAgent()

@@ -1,0 +1,62 @@
+{
+  "district": "Karur",
+  "scraped_at": "2026-09-08T16:58:16.308097+00:00",
+  "count": 5,
+  "mills": [
+    {
+      "name": "Sri Karur Amman Spinning Mills Ltd",
+      "district": "Karur",
+      "location": "Vennamalai Road, Karur, Tamil Nadu 639006",
+      "phone": "+91-98424-51234",
+      "email": "purchase@ammanmills.com",
+      "yarn_type": "Combed Cotton 40s/60s",
+      "spindles": 28000,
+      "contact_person": "P. Senthil Kumar (Managing Director)",
+      "status": "active"
+    },
+    {
+      "name": "Chettinad Spinning & Weaving Mills",
+      "district": "Karur",
+      "location": "Puliyur CF, Karur, Tamil Nadu 639114",
+      "phone": "+91-94433-28901",
+      "email": "yarnsales@chettinad.com",
+      "yarn_type": "Carded Cotton 30s/34s",
+      "spindles": 35000,
+      "contact_person": "M. Ramanathan (General Manager)",
+      "status": "active"
+    },
+    {
+      "name": "Amaravathi Textile & Spinning Mills",
+      "district": "Karur",
+      "location": "Andankoil East, Karur, Tamil Nadu 639002",
+      "phone": "+91-98422-77441",
+      "email": "info@amaravathitex.in",
+      "yarn_type": "Polyester Cotton & Compact 40s",
+      "spindles": 22000,
+      "contact_person": "K. Murugesan (Purchase Executive)",
+      "status": "active"
+    },
+    {
+      "name": "Kongu Velan Spinning Mills Unit II",
+      "district": "Karur",
+      "location": "Thanthonimalai, Karur, Tamil Nadu 639005",
+      "phone": "+91-97890-44321",
+      "email": "kongumills@gmail.com",
+      "yarn_type": "Open End (OE) 10s/20s",
+      "spindles": 18000,
+      "contact_person": "R. Velusamy (Partner)",
+      "status": "active"
+    },
+    {
+      "name": "Pasupathi Super Spinning Mills",
+      "district": "Karur",
+      "location": "Aravakurichi High Road, Karur, Tamil Nadu 639201",
+      "phone": "+91-99421-66789",
+      "email": "dyes.purchase@pasupathimills.com",
+      "yarn_type": "Viscose & 100% Cotton 60s",
+      "spindles": 42000,
+      "contact_person": "S. Natarajan (Factory Manager)",
+      "status": "active"
+    }
+  ]
+}

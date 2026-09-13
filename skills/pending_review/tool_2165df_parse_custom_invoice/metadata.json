@@ -1,0 +1,9 @@
+{
+  "tool_name": "parse_custom_invoice",
+  "description": "Extracts invoice totals from SGC textile vendors",
+  "created_by_task": "task_invoice_442",
+  "proposed_at": "2026-09-09T01:16:58Z",
+  "status": "PENDING_HUMAN_REVIEW",
+  "reviewed_by_user": false,
+  "tool_file": "C:\\Users\\mukil\\jarvis-core\\skills\\pending_review\\tool_2165df_parse_custom_invoice\\parse_custom_invoice.py"
+}

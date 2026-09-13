@@ -1,0 +1,25 @@
+==========================================================
+⚡ AURA-OS / JARVIS AUTONOMOUS EXECUTION REPORT
+Timestamp: 2026-09-12 22:25:03
+Task Prompt: Check git status of C:\Users\mukil\jarvis-core and summarize briefly.
+Working Directory: C:\Users\mukil
+Exit Code: 0 | Success: True
+Execution Time: 15.98 seconds
+==========================================================
+
+--- OUTPUT ---
+### Git Status Summary: [`jarvis-core`](file:///C:/Users/mukil/jarvis-core)
+
+* **Branch:** `main` (ahead of `origin/main` by **1 commit**)
+* **Staged Changes:**
+  * **New:** [`start_job_hunter.bat`](file:///C:/Users/mukil/jarvis-core/start_job_hunter.bat), [`tools/autonomous_job_applier.py`](file:///C:/Users/mukil/jarvis-core/tools/autonomous_job_applier.py), [`tools/export_linkedin_session.py`](file:///C:/Users/mukil/jarvis-core/tools/export_linkedin_session.py), resume PDF.
+  * **Modified:** [`tools/telegram_bridge.py`](file:///C:/Users/mukil/jarvis-core/tools/telegram_bridge.py), storage context/task logs.
+* **Unstaged Changes:**
+  * **Core logic:** [`app/brain/dag_planner.py`](file:///C:/Users/mukil/jarvis-core/app/brain/dag_planner.py), [`app/brain/master_orchestrator.py`](file:///C:/Users/mukil/jarvis-core/app/brain/master_orchestrator.py), [`tools/browser_agent.py`](file:///C:/Users/mukil/jarvis-core/tools/browser_agent.py), and additional edits to [`telegram_bridge.py`](file:///C:/Users/mukil/jarvis-core/tools/telegram_bridge.py).
+  * **State/Memory:** Active run data updated in `data/` and `storage/memory/` (job applications, task logs, conversation history).
+* **Untracked Items:**
+  * Multiple test files under [`tests/`](file:///C:/Users/mukil/jarvis-core/tests) and new tools ([`tools/fast_os_controller.py`](file:///C:/Users/mukil/jarvis-core/tools/fast_os_controller.py), [`tools/placement_pilot.py`](file:///C:/Users/mukil/jarvis-core/tools/placement_pilot.py), etc.).
+  * Recent generated run reports and proof artifacts under `storage/reports/`.
+  * New directories: `server_agent/`, `system_agent/`, `skills/`, `shared/`.
+
+

@@ -88,6 +88,35 @@ class DAGPlanner:
                 is_compensable=False,
             ))
 
+        # Example 3: Computer-Use Vision, Click & Type with SAGA Rollback
+        elif any(k in goal_lower for k in ["click", "type", "tenses", "write", "fill", "input", "button", "solve"]):
+            steps.append(PlanStep(
+                order=1,
+                name="Inspect Screen Elements",
+                tool_name="os_view_screen",
+                args={"query": f"Analyze UI elements for: {user_goal}"},
+                description="Use in-memory vision to inspect active window and identify targets",
+                is_compensable=False,
+            ))
+            steps.append(PlanStep(
+                order=2,
+                name="Focus Target Input / Click Element",
+                tool_name="os_click_element",
+                args={"element": user_goal},
+                description="Click target UI element or text area on screen",
+                is_compensable=True,
+                compensating_action="rollback_escape",
+            ))
+            steps.append(PlanStep(
+                order=3,
+                name="Type Target Text into Field",
+                tool_name="os_type_text",
+                args={"text": user_goal, "mode": "human"},
+                description="Type content with human cadence to bypass paste locks",
+                is_compensable=True,
+                compensating_action="rollback_undo_typing",
+            ))
+
         # Default Single Step Action
         else:
             steps.append(PlanStep(

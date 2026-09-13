@@ -84,6 +84,8 @@ storage/uploads/
 
 storage/tailored_resumes/
 storage/scratch/
+storage/sandboxes/
+storage/chrome_ai_profile/
 .system_generated/
 jarvis_attachments/
 

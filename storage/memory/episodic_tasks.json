@@ -1,0 +1,74 @@
+[
+  {
+    "task_id": "task_003",
+    "tool_name": "scrape_spinning_mills",
+    "original_prompt": "Find spinning mills in Karur for dyes business",
+    "status": "success",
+    "verified": true,
+    "critic_score": 0.92,
+    "reasoning": "Successfully extracted 1 spinning mills for Karur district."
+  },
+  {
+    "task_id": "task_semantic_reject_01",
+    "tool_name": "scrape_spinning_mills",
+    "original_prompt": "Find spinning mills in Karur",
+    "status": "failed",
+    "verified": false,
+    "critic_score": 0.45,
+    "reasoning": "No matching mills found for karur."
+  },
+  {
+    "task_id": "task_semantic_reject_01",
+    "tool_name": "scrape_spinning_mills",
+    "original_prompt": "Find spinning mills in Karur",
+    "status": "failed",
+    "verified": false,
+    "critic_score": 0.45,
+    "reasoning": "No matching mills found for karur."
+  },
+  {
+    "task_id": "0a02229d-f311-4312-aa39-48da07bfe008",
+    "tool_name": "scrape_spinning_mills",
+    "original_prompt": "Karur spinning mills contacts scrape panni kudu maapla",
+    "status": "success",
+    "verified": true,
+    "critic_score": 0.92,
+    "reasoning": "Successfully extracted 5 spinning mills for Karur district."
+  },
+  {
+    "task_id": "7e6a5c90-a93e-4e7d-b07f-20c91bf58e7d",
+    "tool_name": "scrape_spinning_mills",
+    "original_prompt": "Karur spinning mills contacts scrape panni kudu maapla",
+    "status": "success",
+    "verified": true,
+    "critic_score": 0.92,
+    "reasoning": "Successfully extracted 5 spinning mills for Karur district."
+  },
+  {
+    "task_id": "c55faf7b-f817-43b6-8bc4-a8a71def6bfc",
+    "tool_name": "scrape_spinning_mills",
+    "original_prompt": "Karur spinning mills contacts scrape panni kudu maapla",
+    "status": "success",
+    "verified": true,
+    "critic_score": 0.92,
+    "reasoning": "Successfully extracted 5 spinning mills for Karur district."
+  },
+  {
+    "task_id": "test-karur-scraper-001",
+    "tool_name": "scrape_spinning_mills",
+    "original_prompt": "Find verified spinning mills in Karur with source URLs",
+    "status": "success",
+    "verified": true,
+    "critic_score": 0.92,
+    "reasoning": "Successfully extracted 5 spinning mills for Karur district."
+  },
+  {
+    "task_id": "test-karur-scraper-001",
+    "tool_name": "scrape_spinning_mills",
+    "original_prompt": "Find verified spinning mills in Karur with source URLs",
+    "status": "success",
+    "verified": true,
+    "critic_score": 0.92,
+    "reasoning": "Successfully extracted 5 spinning mills for Karur district."
+  }
+]
