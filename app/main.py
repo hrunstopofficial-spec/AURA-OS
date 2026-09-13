@@ -27,8 +27,32 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     # Start 24/7 Render Keep-Alive Pinger (Prevents Cloud Sleep every 2 mins)
     from app.core.keep_alive import keep_alive_engine
     keep_alive_engine.start()
+
+    # Start 24/7 Telegram Bridge Daemon when deployed to Cloud / Production
+    telegram_process = None
+    is_cloud = bool(os.getenv("RENDER") or settings.ENVIRONMENT == "production" or os.getenv("RUN_TELEGRAM_BOT") == "true")
+    if is_cloud and os.getenv("TELEGRAM_BOT_TOKEN"):
+        bridge_script = os.path.join(os.path.dirname(os.path.dirname(__file__)), "tools", "telegram_bridge.py")
+        if os.path.exists(bridge_script):
+            logger.info("🚀 Starting 24/7 Telegram Bridge Daemon on Cloud Container...")
+            try:
+                import subprocess
+                import sys
+                telegram_process = subprocess.Popen([sys.executable, "-u", bridge_script])
+                logger.info(f"✅ Telegram Bridge Daemon running with PID: {telegram_process.pid}")
+            except Exception as e:
+                logger.error(f"Failed to launch Telegram Bridge Daemon: {e}")
     
     yield
+
+    if telegram_process and telegram_process.poll() is None:
+        logger.info("Terminating Telegram Bridge background process...")
+        try:
+            telegram_process.terminate()
+            telegram_process.wait(timeout=5)
+        except Exception:
+            telegram_process.kill()
+
     keep_alive_engine.stop()
     logger.info(f"Shutting down {settings.APP_NAME}...")
 

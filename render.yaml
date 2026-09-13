@@ -18,7 +18,9 @@ services:
       - key: TELEGRAM_BOT_TOKEN
         sync: false
       - key: TELEGRAM_AUTHORIZED_USER_ID
-        value: "6133984381"
+        value: "6233907249"
+      - key: GEMINI_API_KEY
+        sync: false
       - key: CORS_ORIGINS
         value: '["*"]'
       - key: HOST

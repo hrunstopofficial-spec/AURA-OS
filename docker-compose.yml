@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  jarvis-daemon:
+    build: .
+    container_name: jarvis-core-cloud
+    restart: always
+    environment:
+      - PYTHONUNBUFFERED=1
+    env_file:
+      - .env
+    volumes:
+      - ./storage:/app/storage
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"

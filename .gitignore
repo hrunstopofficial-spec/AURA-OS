@@ -61,6 +61,8 @@ storage/vault/
 storage/indeed_session/
 storage/browser_session/
 *.session
+storage/*session*.json
+*_session.json
 
 # Database & Local Runtime Data
 *.db
@@ -79,6 +81,7 @@ logs/
 tmp/
 temp/
 storage/screenshots/
+storage/memory/*.png
 storage/*.bat
 storage/uploads/
 
@@ -86,6 +89,10 @@ storage/tailored_resumes/
 storage/scratch/
 storage/sandboxes/
 storage/chrome_ai_profile/
+storage/reports/
+storage/bills/
+storage/videos/
+scratch/
 .system_generated/
 jarvis_attachments/
 

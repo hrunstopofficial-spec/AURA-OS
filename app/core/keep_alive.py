@@ -23,8 +23,9 @@ class RenderKeepAlive:
         async with httpx.AsyncClient(timeout=10.0) as client:
             while self.is_running:
                 try:
-                    # Self ping localhost:8000/health or public Render URL if configured
-                    render_url = os.environ.get("RENDER_EXTERNAL_URL", "http://127.0.0.1:8000")
+                    # Self ping localhost:$PORT/health or public Render URL if configured
+                    port = os.environ.get("PORT", "8000")
+                    render_url = os.environ.get("RENDER_EXTERNAL_URL", f"http://127.0.0.1:{port}")
                     target = f"{render_url.rstrip('/')}/health"
                     
                     resp = await client.get(target)

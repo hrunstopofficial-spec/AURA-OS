@@ -1,0 +1,278 @@
+{
+  "01_Mobile_and_Telegram_Bridge": {
+    "folder_id": "1eEqTQ1s4gNPu5mVxdPC9dvbGjMu09_N8",
+    "folder_link": "https://drive.google.com/drive/folders/1eEqTQ1s4gNPu5mVxdPC9dvbGjMu09_N8",
+    "files": [
+      {
+        "name": "telegram_bridge.py",
+        "id": "1USiEdWfPwdTiCEVTvjBQJRCdVkSomf5t",
+        "link": "https://drive.google.com/file/d/1USiEdWfPwdTiCEVTvjBQJRCdVkSomf5t/view?usp=drivesdk",
+        "size_bytes": "55175"
+      },
+      {
+        "name": "tts_generator.py",
+        "id": "1ljG7FM0MWBAlxpTOfpaKIoGJVkHzVczi",
+        "link": "https://drive.google.com/file/d/1ljG7FM0MWBAlxpTOfpaKIoGJVkHzVczi/view?usp=drivesdk",
+        "size_bytes": "1865"
+      },
+      {
+        "name": "start_telegram_bot.bat",
+        "id": "1lwPAuM7JFbYP0rOugkQ-VieMl-UbbQl7",
+        "link": "https://drive.google.com/file/d/1lwPAuM7JFbYP0rOugkQ-VieMl-UbbQl7/view?usp=drivesdk",
+        "size_bytes": "303"
+      },
+      {
+        "name": "start_telegram_gateway.bat",
+        "id": "19R9Vm1arDJu6k-yV5edbQkMmzFFulupx",
+        "link": "https://drive.google.com/file/d/19R9Vm1arDJu6k-yV5edbQkMmzFFulupx/view?usp=drivesdk",
+        "size_bytes": "518"
+      }
+    ]
+  },
+  "02_SGC_Textile_and_Billing_Engine": {
+    "folder_id": "1jBXG35I-UHCf_Lk9XmkpV8DGMAgVHJse",
+    "folder_link": "https://drive.google.com/drive/folders/1jBXG35I-UHCf_Lk9XmkpV8DGMAgVHJse",
+    "files": [
+      {
+        "name": "sgc_shade_engine.py",
+        "id": "1OzMfC1v3hbbZyXEJUPNwhzHacti_kw2l",
+        "link": "https://drive.google.com/file/d/1OzMfC1v3hbbZyXEJUPNwhzHacti_kw2l/view?usp=drivesdk",
+        "size_bytes": "16732"
+      },
+      {
+        "name": "sgc_invoice_creator.py",
+        "id": "1XPFDLjgOyioMALbt3bWEkOZX_LTgiRiu",
+        "link": "https://drive.google.com/file/d/1XPFDLjgOyioMALbt3bWEkOZX_LTgiRiu/view?usp=drivesdk",
+        "size_bytes": "15828"
+      },
+      {
+        "name": "sgc_overdue_radar.py",
+        "id": "1D24fFTXF7FHNS4LMKmqeXRcgIbh3xK3F",
+        "link": "https://drive.google.com/file/d/1D24fFTXF7FHNS4LMKmqeXRcgIbh3xK3F/view?usp=drivesdk",
+        "size_bytes": "3794"
+      },
+      {
+        "name": "sgc_dispenser_esp32.ino",
+        "id": "1-QOx2yoXa2N88p1Yjp1om9j5_tR2roqv",
+        "link": "https://drive.google.com/file/d/1-QOx2yoXa2N88p1Yjp1om9j5_tR2roqv/view?usp=drivesdk",
+        "size_bytes": "8191"
+      }
+    ]
+  },
+  "03_Career_and_Placement_Pilot": {
+    "folder_id": "1md5XnDBFzXakiQavd-YjpFg9OUXpd7Jw",
+    "folder_link": "https://drive.google.com/drive/folders/1md5XnDBFzXakiQavd-YjpFg9OUXpd7Jw",
+    "files": [
+      {
+        "name": "autonomous_job_applier.py",
+        "id": "1-5HlvgQ9UsVnMQyI2NmY_VAphWN8ppsi",
+        "link": "https://drive.google.com/file/d/1-5HlvgQ9UsVnMQyI2NmY_VAphWN8ppsi/view?usp=drivesdk",
+        "size_bytes": "24679"
+      },
+      {
+        "name": "placement_drill.py",
+        "id": "1MZvaZ-oqV7bxaKR2K1QLIWglo0-58rJ2",
+        "link": "https://drive.google.com/file/d/1MZvaZ-oqV7bxaKR2K1QLIWglo0-58rJ2/view?usp=drivesdk",
+        "size_bytes": "11659"
+      },
+      {
+        "name": "career_auto_apply.py",
+        "id": "1gLiYUq8rqe7rzEJjnIPj79PyBAvzJrR4",
+        "link": "https://drive.google.com/file/d/1gLiYUq8rqe7rzEJjnIPj79PyBAvzJrR4/view?usp=drivesdk",
+        "size_bytes": "14215"
+      },
+      {
+        "name": "placement_tailor_agent.py",
+        "id": "1I9wWLRnbFAww4AAeTd50aOdB0snbALzy",
+        "link": "https://drive.google.com/file/d/1I9wWLRnbFAww4AAeTd50aOdB0snbALzy/view?usp=drivesdk",
+        "size_bytes": "5058"
+      },
+      {
+        "name": "placement_agent.py",
+        "id": "1UPRmN7MK_R5ca8K_CCKmMpDsHCRr9nUQ",
+        "link": "https://drive.google.com/file/d/1UPRmN7MK_R5ca8K_CCKmMpDsHCRr9nUQ/view?usp=drivesdk",
+        "size_bytes": "6393"
+      }
+    ]
+  },
+  "04_OS_Vision_and_Automation": {
+    "folder_id": "1lVLMy36F7JJnJljUUERvwpnJpqGtHOyI",
+    "folder_link": "https://drive.google.com/drive/folders/1lVLMy36F7JJnJljUUERvwpnJpqGtHOyI",
+    "files": [
+      {
+        "name": "fast_os_controller.py",
+        "id": "1dqjKgN5bwhslAwf8fZqP7PdKwAnkv5od",
+        "link": "https://drive.google.com/file/d/1dqjKgN5bwhslAwf8fZqP7PdKwAnkv5od/view?usp=drivesdk",
+        "size_bytes": "14358"
+      },
+      {
+        "name": "browser_agent.py",
+        "id": "1Ye-v9GEN1x2jB5-PvVgtqmsQumMRkdS0",
+        "link": "https://drive.google.com/file/d/1Ye-v9GEN1x2jB5-PvVgtqmsQumMRkdS0/view?usp=drivesdk",
+        "size_bytes": "12517"
+      },
+      {
+        "name": "linkedin_agent.py",
+        "id": "1oKKbCVmrAzBIaUKwumUBrBpgVV1-joPj",
+        "link": "https://drive.google.com/file/d/1oKKbCVmrAzBIaUKwumUBrBpgVV1-joPj/view?usp=drivesdk",
+        "size_bytes": "23197"
+      },
+      {
+        "name": "install_git_hook.py",
+        "id": "1cqofLkUWajep-lln1WU0uYMJVxT98NMB",
+        "link": "https://drive.google.com/file/d/1cqofLkUWajep-lln1WU0uYMJVxT98NMB/view?usp=drivesdk",
+        "size_bytes": "2611"
+      }
+    ]
+  },
+  "05_Brain_and_Cognitive_Engine": {
+    "folder_id": "1EkRRD2rcXRhAy5EG2DtkYgYLG_ghKZXH",
+    "folder_link": "https://drive.google.com/drive/folders/1EkRRD2rcXRhAy5EG2DtkYgYLG_ghKZXH",
+    "files": [
+      {
+        "name": "agent_brain.py",
+        "id": "1FRJrWW6mhMAwy4TRZsfAhRRgfpoK1h3X",
+        "link": "https://drive.google.com/file/d/1FRJrWW6mhMAwy4TRZsfAhRRgfpoK1h3X/view?usp=drivesdk",
+        "size_bytes": "40163"
+      },
+      {
+        "name": "cognitive_router.py",
+        "id": "1UyHiWecwtK76EJ696BSvci6lcTF2bU4P",
+        "link": "https://drive.google.com/file/d/1UyHiWecwtK76EJ696BSvci6lcTF2bU4P/view?usp=drivesdk",
+        "size_bytes": "10387"
+      },
+      {
+        "name": "adaptive_scheduler.py",
+        "id": "1w5CKxRcoq5Fdt-6PoxUf3kXCn5jLa_of",
+        "link": "https://drive.google.com/file/d/1w5CKxRcoq5Fdt-6PoxUf3kXCn5jLa_of/view?usp=drivesdk",
+        "size_bytes": "6469"
+      },
+      {
+        "name": "agentic_engine.py",
+        "id": "1y9rqNTzLVqqUzTe-XBpvdagqbEd3acCt",
+        "link": "https://drive.google.com/file/d/1y9rqNTzLVqqUzTe-XBpvdagqbEd3acCt/view?usp=drivesdk",
+        "size_bytes": "11441"
+      },
+      {
+        "name": "codeact_cloud_runner.py",
+        "id": "1ArhZwjUpxW8XQP1PHQ6nUP5ax0AQHIEZ",
+        "link": "https://drive.google.com/file/d/1ArhZwjUpxW8XQP1PHQ6nUP5ax0AQHIEZ/view?usp=drivesdk",
+        "size_bytes": "5256"
+      },
+      {
+        "name": "intent_router.py",
+        "id": "1OZRwi1KKImHwPXT_Ht79ogyJps6sF-6B",
+        "link": "https://drive.google.com/file/d/1OZRwi1KKImHwPXT_Ht79ogyJps6sF-6B/view?usp=drivesdk",
+        "size_bytes": "6381"
+      },
+      {
+        "name": "self_healing_engine.py",
+        "id": "1eG0yr26gUUfFEzTrmqA_bqJh7MLi4yqc",
+        "link": "https://drive.google.com/file/d/1eG0yr26gUUfFEzTrmqA_bqJh7MLi4yqc/view?usp=drivesdk",
+        "size_bytes": "2976"
+      },
+      {
+        "name": "autonomous_heartbeat_daemon.py",
+        "id": "1zx2P0qFygqSQNEi__IQXTfvHaTN2CaWI",
+        "link": "https://drive.google.com/file/d/1zx2P0qFygqSQNEi__IQXTfvHaTN2CaWI/view?usp=drivesdk",
+        "size_bytes": "5867"
+      }
+    ]
+  },
+  "06_Cloud_Drive_and_Storage": {
+    "folder_id": "1aCIIl6pCks9JkifCE7ittktxKOlQo8x1",
+    "folder_link": "https://drive.google.com/drive/folders/1aCIIl6pCks9JkifCE7ittktxKOlQo8x1",
+    "files": [
+      {
+        "name": "cloud_storage_manager.py",
+        "id": "1Ff_oIx6wmXSirww9UPWBnieS0NEAYpxB",
+        "link": "https://drive.google.com/file/d/1Ff_oIx6wmXSirww9UPWBnieS0NEAYpxB/view?usp=drivesdk",
+        "size_bytes": "5190"
+      },
+      {
+        "name": "unified_drive_mesh_router.py",
+        "id": "1gMMo9n2-LcZLuXNiXOTEA7W-WUpv42nv",
+        "link": "https://drive.google.com/file/d/1gMMo9n2-LcZLuXNiXOTEA7W-WUpv42nv/view?usp=drivesdk",
+        "size_bytes": "4409"
+      },
+      {
+        "name": "sync_to_drive.py",
+        "id": "1VIoTRIfG6nb1pstBoG_X4fZVgz7-izsL",
+        "link": "https://drive.google.com/file/d/1VIoTRIfG6nb1pstBoG_X4fZVgz7-izsL/view?usp=drivesdk",
+        "size_bytes": "3856"
+      },
+      {
+        "name": "vault_manager.py",
+        "id": "1UFlNTdcG2YmGoUFpUvRddZT1pqieU_BH",
+        "link": "https://drive.google.com/file/d/1UFlNTdcG2YmGoUFpUvRddZT1pqieU_BH/view?usp=drivesdk",
+        "size_bytes": "2635"
+      },
+      {
+        "name": "distributed_drive_mesh.json",
+        "id": "1QF1IWQz-y7C7PDuO2yYJHHkAYi900AQP",
+        "link": "https://drive.google.com/file/d/1QF1IWQz-y7C7PDuO2yYJHHkAYi900AQP/view?usp=drivesdk",
+        "size_bytes": "2429"
+      }
+    ]
+  },
+  "07_Server_Deployment_Docker": {
+    "folder_id": "1P3ESq0IWwfS5SFT_ckWSuD1p5XMPbNTh",
+    "folder_link": "https://drive.google.com/drive/folders/1P3ESq0IWwfS5SFT_ckWSuD1p5XMPbNTh",
+    "files": [
+      {
+        "name": "Dockerfile",
+        "id": "1QtKSq1PGcMW8v8He-MPf3FbR65Cdgkv5",
+        "link": "https://drive.google.com/file/d/1QtKSq1PGcMW8v8He-MPf3FbR65Cdgkv5/view?usp=drivesdk",
+        "size_bytes": "902"
+      },
+      {
+        "name": "docker-compose.yml",
+        "id": "1Mg_inxWyQhqrit-Ta_upCZPnGeBxcZEr",
+        "link": "https://drive.google.com/file/d/1Mg_inxWyQhqrit-Ta_upCZPnGeBxcZEr/view?usp=drivesdk",
+        "size_bytes": "329"
+      },
+      {
+        "name": "render.yaml",
+        "id": "1LiUXm7MZ2GaW5wGmYPczr8An8gR8w6Nz",
+        "link": "https://drive.google.com/file/d/1LiUXm7MZ2GaW5wGmYPczr8An8gR8w6Nz/view?usp=drivesdk",
+        "size_bytes": "664"
+      },
+      {
+        "name": "requirements.txt",
+        "id": "1J5b12s8RNceZCEewhzNGcNwSTl4wjSNA",
+        "link": "https://drive.google.com/file/d/1J5b12s8RNceZCEewhzNGcNwSTl4wjSNA/view?usp=drivesdk",
+        "size_bytes": "383"
+      },
+      {
+        "name": "config.py",
+        "id": "17EzcW3_imqSPLmOsOXhbOtoFCwzK9PNX",
+        "link": "https://drive.google.com/file/d/17EzcW3_imqSPLmOsOXhbOtoFCwzK9PNX/view?usp=drivesdk",
+        "size_bytes": "1628"
+      },
+      {
+        "name": "deploy_server.sh",
+        "id": "12-ccSfkcrBBTeXRUKzSD0EU7KqMRnRuH",
+        "link": "https://drive.google.com/file/d/12-ccSfkcrBBTeXRUKzSD0EU7KqMRnRuH/view?usp=drivesdk",
+        "size_bytes": "1637"
+      }
+    ]
+  },
+  "08_System_Architectures_and_Vault": {
+    "folder_id": "1i8VHw2YVm2X9rm7EjpyeC5LJbEY5JaoJ",
+    "folder_link": "https://drive.google.com/drive/folders/1i8VHw2YVm2X9rm7EjpyeC5LJbEY5JaoJ",
+    "files": [
+      {
+        "name": "AURA_MASTER_KNOWLEDGE_VAULT.md",
+        "id": "1gEWCk57tT5XpqWEfVjL19jmv9hDd7zHl",
+        "link": "https://drive.google.com/file/d/1gEWCk57tT5XpqWEfVjL19jmv9hDd7zHl/view?usp=drivesdk",
+        "size_bytes": "6073"
+      },
+      {
+        "name": "README.md",
+        "id": "1oJd9ZKZU6yplWGuO39zxebKihDA8Zafu",
+        "link": "https://drive.google.com/file/d/1oJd9ZKZU6yplWGuO39zxebKihDA8Zafu/view?usp=drivesdk",
+        "size_bytes": "5017"
+      }
+    ]
+  }
+}

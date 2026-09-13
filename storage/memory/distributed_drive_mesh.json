@@ -1,68 +1,48 @@
 {
-  "total_nodes": 10,
-  "allocated_capacity": "250 GB (10 x 25 GB Mesh)",
-  "status": "ACTIVE_DISTRIBUTED_MESH",
-  "created_at": "2026-09-05T21:21:00+05:30",
-  "nodes": {
+  "master_vault_id": "1iaHzDzC7KiJk2FlMdS7eNW7vkYxDeaXZ",
+  "master_vault_url": "https://drive.google.com/drive/folders/1iaHzDzC7KiJk2FlMdS7eNW7vkYxDeaXZ",
+  "sgc_bills_vault_id": "11KMBP0HHa2AFl30zjL8-a_-BQk9MgWM9",
+  "sgc_bills_vault_url": "https://drive.google.com/drive/folders/11KMBP0HHa2AFl30zjL8-a_-BQk9MgWM9?usp=drive_link",
+  "status": "100%_LIVE_SYNCHRONIZED",
+  "last_synced": "2026-09-13T15:44:15+05:30",
+  "shared_with_primary": "mukilarasu55@gmail.com (Full Editor Access)",
+  "authenticated_owner": "ganapathycolours1603@gmail.com",
+  "subfolders": {
     "node_01_core_memory": {
-      "id": "14fGVZomgy2CItfspYo7cVXSImAqJDZZX",
-      "url": "https://drive.google.com/open?id=14fGVZomgy2CItfspYo7cVXSImAqJDZZX",
-      "role": "Persistent JSON Context, Task Logs & Memory Backups",
-      "capacity_gb": 25
+      "id": "1gh8zeZiCTGlggSBYrOyCx8vPesrx0bm1",
+      "name": "01_Conversations_Transcripts",
+      "url": "https://drive.google.com/drive/folders/1gh8zeZiCTGlggSBYrOyCx8vPesrx0bm1",
+      "role": "Daily Chat Transcripts, Task Logs, Brain Context, Reminders & Profile JSONs"
     },
     "node_02_project_codebases": {
-      "id": "1rXA02dZn0palLwBl0hyTmUV9_-brkpKZ",
-      "url": "https://drive.google.com/open?id=1rXA02dZn0palLwBl0hyTmUV9_-brkpKZ",
-      "role": "Zipped Codebases & Git Mirrored Project Repositories",
-      "capacity_gb": 25
+      "id": "1Ef4CnQzdbYmc1kKUHeq4zZW0lFn5qXF1",
+      "name": "02_Projects_Codebases",
+      "url": "https://drive.google.com/drive/folders/1Ef4CnQzdbYmc1kKUHeq4zZW0lFn5qXF1",
+      "role": "Zipped Codebases & Git Mirrored Project Repositories (Zero Local Disk Accumulation)"
     },
     "node_03_placement_resumes": {
-      "id": "1rl5EhQCcTiyyrVXp57l4P-4Bd76Q7YM2",
-      "url": "https://drive.google.com/open?id=1rl5EhQCcTiyyrVXp57l4P-4Bd76Q7YM2",
-      "role": "ATS Tailored Resumes, Cover Letters & Job Portfolios",
-      "capacity_gb": 25
+      "id": "1crALd2118MYUPoEKokufVog_FgXrexks",
+      "name": "03_Placement_Resumes",
+      "url": "https://drive.google.com/drive/folders/1crALd2118MYUPoEKokufVog_FgXrexks",
+      "role": "ATS Tailored Resumes, Portfolios, Cover Letters & Solved Java DSA Drills"
     },
     "node_04_b2b_scraped_data": {
-      "id": "1ebinMnwlZFz6RhaRFYtVHhB2whzvPXDK",
-      "url": "https://drive.google.com/open?id=1ebinMnwlZFz6RhaRFYtVHhB2whzvPXDK",
-      "role": "B2B Leads, Textile Exporter CSVs & Business Datasets",
-      "capacity_gb": 25
+      "id": "1RBj3i2QBdEAoquUN6uTQvO2QmYMKWoqi",
+      "name": "04_B2B_Textile_Leads",
+      "url": "https://drive.google.com/drive/folders/1RBj3i2QBdEAoquUN6uTQvO2QmYMKWoqi",
+      "role": "B2B Spinning Mill Scraped Leads, Textile Exporter CSVs & Business Datasets"
     },
     "node_05_sgc_invoices": {
-      "id": "1plcIv7vWwG60EYGYyVqoFEfwx9OQGP_-",
-      "url": "https://drive.google.com/open?id=1plcIv7vWwG60EYGYyVqoFEfwx9OQGP_-",
-      "role": "Sri Ganapathi Colours PDF Bills, Ledgers & Overdue Lists",
-      "capacity_gb": 25
+      "id": "11KMBP0HHa2AFl30zjL8-a_-BQk9MgWM9",
+      "name": "SGC-Bills",
+      "url": "https://drive.google.com/drive/folders/11KMBP0HHa2AFl30zjL8-a_-BQk9MgWM9?usp=drive_link",
+      "role": "Sri Ganapathi Colours Main Bills Storage Vault (Mukil Designated Primary)"
     },
-    "node_06_visual_screenshots": {
-      "id": "1ckOQk0kLAlFr5S4xMkEZ3KXtm6hbSvjY",
-      "url": "https://drive.google.com/open?id=1ckOQk0kLAlFr5S4xMkEZ3KXtm6hbSvjY",
-      "role": "PC & Browser Verification Proof Photos & Visual Evidence",
-      "capacity_gb": 25
-    },
-    "node_07_ai_model_weights": {
-      "id": "1s4YowqJvRiSEv8r1r_rc35ejVw1A05lU",
-      "url": "https://drive.google.com/open?id=1s4YowqJvRiSEv8r1r_rc35ejVw1A05lU",
-      "role": "Local Embedding Vectors, Audio Notes & Scratch Cache",
-      "capacity_gb": 25
-    },
-    "node_08_learning_materials": {
-      "id": "18L9Q6MC1fiT_LIPg0FKpLlQ0OR052yyJ",
-      "url": "https://drive.google.com/open?id=18L9Q6MC1fiT_LIPg0FKpLlQ0OR052yyJ",
-      "role": "Java DSA, Python, Aptitude Tests & Interview Questionnaires",
-      "capacity_gb": 25
-    },
-    "node_09_cloud_backups": {
-      "id": "1SoZDnh1JPz59NaKxvnR72xtJSYWbL8uU",
-      "url": "https://drive.google.com/open?id=1SoZDnh1JPz59NaKxvnR72xtJSYWbL8uU",
-      "role": "Database Snapshots, Disaster Recovery & Outbox Dumps",
-      "capacity_gb": 25
-    },
-    "node_10_shared_overflow": {
-      "id": "1Qdf3ac_4NEK5id-5ww9V7QgpD5eMxLYC",
-      "url": "https://drive.google.com/open?id=1Qdf3ac_4NEK5id-5ww9V7QgpD5eMxLYC",
-      "role": "General Multi-Agent Shared Workspace & File Staging",
-      "capacity_gb": 25
+    "node_06_media_proofs": {
+      "id": "1v17kqsJvTdiI3XNT0SvybwyxwoZ6mIvX",
+      "name": "05_Media_Proofs",
+      "url": "https://drive.google.com/drive/folders/1v17kqsJvTdiI3XNT0SvybwyxwoZ6mIvX",
+      "role": "Verification Screenshots, Audio Notes, Telemetry & Disaster Recovery Snapshots"
     }
   }
 }

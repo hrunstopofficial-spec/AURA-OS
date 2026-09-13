@@ -324,15 +324,100 @@ class AutonomousJobHunter:
                     print(f"[!] File upload note: {ex}")
 
             # Check dynamic text inputs (screening questions)
-            text_inputs = page.locator(".jobs-easy-apply-modal input[type='text'], .jobs-easy-apply-modal textarea").all()
+            text_inputs = page.locator(".jobs-easy-apply-modal input[type='text'], .jobs-easy-apply-modal textarea, form input[type='text'], form textarea").all()
             for inp in text_inputs:
                 try:
                     if inp.is_visible() and not inp.input_value():
-                        label = page.locator(f"label[for='{inp.get_attribute('id')}']").first
-                        label_text = label.inner_text() if label.is_visible() else "Question"
+                        inp_id = inp.get_attribute('id') or ''
+                        label = page.locator(f"label[for='{inp_id}']").first if inp_id else None
+                        label_text = label.inner_text() if label and label.is_visible() else "Question"
                         ans = solve_screening_question_with_ai(label_text)
                         inp.fill(ans)
                         print(f"    👉 AI Answered: '{label_text[:40]}' -> '{ans}'")
+                except Exception:
+                    pass
+
+            # Check native HTML <select> dropdowns
+            select_els = page.locator(".jobs-easy-apply-modal select, form select").all()
+            for sel in select_els:
+                try:
+                    if sel.is_visible():
+                        sel_id = sel.get_attribute('id') or ''
+                        label = page.locator(f"label[for='{sel_id}']").first if sel_id else None
+                        label_text = label.inner_text() if label and label.is_visible() else "Select option"
+                        ans = solve_screening_question_with_ai(label_text)
+                        # Try selecting by label or value
+                        try:
+                            sel.select_option(label=ans)
+                            print(f"    👉 Dropdown Selected (Label): '{label_text[:35]}' -> '{ans}'")
+                        except Exception:
+                            try:
+                                sel.select_option(value=ans)
+                                print(f"    👉 Dropdown Selected (Value): '{label_text[:35]}' -> '{ans}'")
+                            except Exception:
+                                # Fallback to first non-empty option
+                                options = sel.locator("option").all()
+                                if len(options) > 1:
+                                    sel.select_option(index=1)
+                                    print(f"    👉 Dropdown Fallback Index 1: '{label_text[:35]}'")
+                except Exception:
+                    pass
+
+            # Check custom React-Select and ARIA Comboboxes
+            comboboxes = page.locator(".jobs-easy-apply-modal input[role='combobox'], form input[role='combobox']").all()
+            for cb in comboboxes:
+                try:
+                    if cb.is_visible():
+                        cb_id = cb.get_attribute('id') or ''
+                        parent_txt = cb.locator("xpath=ancestor::div[contains(@class,'field') or contains(@class,'form') or contains(@class,'question')][1]").inner_text() if cb.count() > 0 else ""
+                        q_text = parent_txt.split('\n')[0] if parent_txt else cb_id
+                        ans = solve_screening_question_with_ai(q_text)
+                        cb.scroll_into_view_if_needed()
+                        time.sleep(0.2)
+                        cb.click()
+                        time.sleep(0.2)
+                        cb.type(ans, delay=40)
+                        time.sleep(0.5)
+                        options = page.locator("[id*='react-select'][id*='option'], div[class*='option'], div[role='option']").all()
+                        if options:
+                            matched = None
+                            ans_lower = ans.lower()
+                            for opt in options:
+                                if opt.inner_text().strip().lower() == ans_lower:
+                                    matched = opt
+                                    break
+                            if not matched:
+                                for opt in options:
+                                    if ans_lower in opt.inner_text().strip().lower():
+                                        matched = opt
+                                        break
+                            if not matched:
+                                matched = options[0]
+                            matched.click()
+                            print(f"    👉 Combobox Selected: '{q_text[:35]}' -> '{matched.inner_text().strip()}'")
+                        else:
+                            cb.press("Enter")
+                            print(f"    👉 Combobox Enter: '{q_text[:35]}' -> '{ans}'")
+                except Exception:
+                    pass
+
+            # Check Radio buttons (e.g. Yes/No screening questions)
+            radio_groups = page.locator(".jobs-easy-apply-modal fieldset, form fieldset").all()
+            for rg in radio_groups:
+                try:
+                    if rg.is_visible():
+                        legend = rg.locator("legend").first
+                        legend_txt = legend.inner_text() if legend.is_visible() else "Question"
+                        ans = solve_screening_question_with_ai(legend_txt)
+                        radios = rg.locator("input[type='radio']").all()
+                        for r in radios:
+                            r_id = r.get_attribute('id') or ''
+                            r_lbl = rg.locator(f"label[for='{r_id}']").first if r_id else None
+                            r_txt = r_lbl.inner_text() if r_lbl and r_lbl.is_visible() else ""
+                            if ans.lower() in r_txt.lower() or r_txt.lower() in ans.lower():
+                                r.click()
+                                print(f"    👉 Radio Selected: '{legend_txt[:35]}' -> '{r_txt}'")
+                                break
                 except Exception:
                     pass
 

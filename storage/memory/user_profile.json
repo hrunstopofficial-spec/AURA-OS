@@ -20,6 +20,11 @@
     "drive_link": "https://drive.google.com/file/d/1TpyzV7OGEf-YQfGLUpusAI5cDDvF1kAJ/view?usp=drive_link",
     "drive_file_id": "1TpyzV7OGEf-YQfGLUpusAI5cDDvF1kAJ"
   },
+  "sgc_billing_vault": {
+    "main_drive_folder_id": "11KMBP0HHa2AFl30zjL8-a_-BQk9MgWM9",
+    "main_drive_url": "https://drive.google.com/drive/folders/11KMBP0HHa2AFl30zjL8-a_-BQk9MgWM9?usp=drive_link",
+    "description": "Mukil's Master Main Drive Folder for Sri Ganapathi Colours (SGC) Bills & Invoices"
+  },
   "technical_skills": {
     "languages": ["Java", "Python", "JavaScript", "SQL"],
     "frameworks_and_tools": ["Flask", "Node.js", "React", "Electron", "PostgreSQL", "MySQL", "Git", "GitHub", "Railway", "Postman", "Playwright", "Groq API"]

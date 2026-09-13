@@ -1,0 +1,462 @@
+{
+  "timestamp": "2026-09-13T16:05:32.703621",
+  "total_jobs": 57,
+  "jobs": [
+    {
+      "company": "Canonical",
+      "title": "Software Engineer - Python - Container Images",
+      "location": "Home Based - Americas; Home Based - APAC; Home based - EMEA",
+      "portal": "Greenhouse",
+      "ats_score": "94%",
+      "url": "https://job-boards.greenhouse.io/canonical/jobs/6222476"
+    },
+    {
+      "company": "Canonical",
+      "title": "Go (Golang) Software Engineer, Developer Tooling and Containers",
+      "location": "Home Based - APAC",
+      "portal": "Greenhouse",
+      "ats_score": "91%",
+      "url": "https://job-boards.greenhouse.io/canonical/jobs/4857458"
+    },
+    {
+      "company": "Canonical",
+      "title": "Software Engineer - Secure Container Images",
+      "location": "Home Based - Americas; Home Based - APAC; Home based - EMEA",
+      "portal": "Greenhouse",
+      "ats_score": "91%",
+      "url": "https://job-boards.greenhouse.io/canonical/jobs/8130859"
+    },
+    {
+      "company": "Instacart",
+      "title": "Machine Learning Engineer II, Ads - Response Prediction",
+      "location": "Canada - Remote (ON, AB, BC, or NS Only)",
+      "portal": "Greenhouse",
+      "ats_score": "91%",
+      "url": "https://instacart.careers/job/?gh_jid=8143263"
+    },
+    {
+      "company": "Affirm",
+      "title": "Machine Learning Engineer II (Underwriting ML)",
+      "location": "Remote Canada",
+      "portal": "Greenhouse",
+      "ats_score": "91%",
+      "url": "https://job-boards.greenhouse.io/affirm/jobs/7822389003"
+    },
+    {
+      "company": "Affirm",
+      "title": "Machine Learning Engineer II (Underwriting ML)",
+      "location": "Remote US",
+      "portal": "Greenhouse",
+      "ats_score": "91%",
+      "url": "https://job-boards.greenhouse.io/affirm/jobs/7822387003"
+    },
+    {
+      "company": "Canonical",
+      "title": "C++/Rust Graphics and Windowing System Software Engineer - Mir",
+      "location": "Home Based - APAC; Home based - EMEA",
+      "portal": "Greenhouse",
+      "ats_score": "88%",
+      "url": "https://job-boards.greenhouse.io/canonical/jobs/4439935"
+    },
+    {
+      "company": "Canonical",
+      "title": "Developer Relations Engineer",
+      "location": "Home Based - APAC; Home based - EMEA",
+      "portal": "Greenhouse",
+      "ats_score": "88%",
+      "url": "https://job-boards.greenhouse.io/canonical/jobs/5143011"
+    },
+    {
+      "company": "Canonical",
+      "title": "Graduate HR Generalist - APAC",
+      "location": "Home Based - APAC",
+      "portal": "Greenhouse",
+      "ats_score": "88%",
+      "url": "https://job-boards.greenhouse.io/canonical/jobs/5253092"
+    },
+    {
+      "company": "Canonical",
+      "title": "Marketing Associate ",
+      "location": "Home Based - Americas; Home Based - APAC; Home based - EMEA",
+      "portal": "Greenhouse",
+      "ats_score": "88%",
+      "url": "https://job-boards.greenhouse.io/canonical/jobs/4981245"
+    },
+    {
+      "company": "Canonical",
+      "title": "Open Source Networking Software Engineer - ToR Switch / SmartNIC / DPU ",
+      "location": "Home Based - Americas; Home Based - APAC; Office Based - Beijing, China; Office Based - Taipei, Taiwan",
+      "portal": "Greenhouse",
+      "ats_score": "88%",
+      "url": "https://job-boards.greenhouse.io/canonical/jobs/5660661"
+    },
+    {
+      "company": "Datadog",
+      "title": "Developer Advocate - Service Management",
+      "location": "California, USA, Remote; New York, USA, Remote",
+      "portal": "Greenhouse",
+      "ats_score": "88%",
+      "url": "https://careers.datadoghq.com/detail/8139662/?gh_jid=8139662"
+    },
+    {
+      "company": "Mongodb",
+      "title": "Associate TSE I",
+      "location": "Bengaluru",
+      "portal": "Greenhouse",
+      "ats_score": "88%",
+      "url": "https://www.mongodb.com/careers/job/?gh_jid=8097618"
+    },
+    {
+      "company": "Mongodb",
+      "title": "Associate TSE II",
+      "location": "Bengaluru",
+      "portal": "Greenhouse",
+      "ats_score": "88%",
+      "url": "https://www.mongodb.com/careers/job/?gh_jid=8110518"
+    },
+    {
+      "company": "Mongodb",
+      "title": "Associate TSE II",
+      "location": "Bengaluru",
+      "portal": "Greenhouse",
+      "ats_score": "88%",
+      "url": "https://www.mongodb.com/careers/job/?gh_jid=8089399"
+    },
+    {
+      "company": "Instacart",
+      "title": "Sales Associate - New York",
+      "location": "United States - Remote",
+      "portal": "Greenhouse",
+      "ats_score": "88%",
+      "url": "https://instacart.careers/job/?gh_jid=7558978"
+    },
+    {
+      "company": "Instacart",
+      "title": "Software Engineer II, - Ads",
+      "location": "Canada - Remote (ON, AB, BC, or NS Only)",
+      "portal": "Greenhouse",
+      "ats_score": "88%",
+      "url": "https://instacart.careers/job/?gh_jid=8188987"
+    },
+    {
+      "company": "Instacart",
+      "title": "Software Engineer II, Technical Search Visibility",
+      "location": "Canada - Remote (ON, AB, BC, or NS Only)",
+      "portal": "Greenhouse",
+      "ats_score": "88%",
+      "url": "https://instacart.careers/job/?gh_jid=7963661"
+    },
+    {
+      "company": "Stripe",
+      "title": "Backend Engineer, Core Technology",
+      "location": "US-Remote, Chicago, Seattle, San Francisco",
+      "portal": "Greenhouse",
+      "ats_score": "88%",
+      "url": "https://stripe.com/jobs/search?gh_jid=6042172"
+    },
+    {
+      "company": "Stripe",
+      "title": "Backend Engineer, Payments",
+      "location": "Toronto, Canada Remote",
+      "portal": "Greenhouse",
+      "ats_score": "88%",
+      "url": "https://stripe.com/jobs/search?gh_jid=6692166"
+    },
+    {
+      "company": "Stripe",
+      "title": " Credit Risk Operations Associate",
+      "location": "Bangalore ",
+      "portal": "Greenhouse",
+      "ats_score": "88%",
+      "url": "https://stripe.com/jobs/search?gh_jid=8104748"
+    },
+    {
+      "company": "Stripe",
+      "title": "Fraud Operations Associate (Mandarin Speaking)",
+      "location": "Bengaluru",
+      "portal": "Greenhouse",
+      "ats_score": "88%",
+      "url": "https://stripe.com/jobs/search?gh_jid=8076652"
+    },
+    {
+      "company": "Stripe",
+      "title": "Operations Associate, Apprenticeship",
+      "location": "Bengaluru",
+      "portal": "Greenhouse",
+      "ats_score": "88%",
+      "url": "https://stripe.com/jobs/search?gh_jid=8131339"
+    },
+    {
+      "company": "Stripe",
+      "title": "Operations Associate, Financial Crimes EDD/PEP",
+      "location": "Bangalore ",
+      "portal": "Greenhouse",
+      "ats_score": "88%",
+      "url": "https://stripe.com/jobs/search?gh_jid=8102597"
+    },
+    {
+      "company": "Stripe",
+      "title": "Operations Associate, Sanctions",
+      "location": "Bengaluru",
+      "portal": "Greenhouse",
+      "ats_score": "88%",
+      "url": "https://stripe.com/jobs/search?gh_jid=8098394"
+    },
+    {
+      "company": "Stripe",
+      "title": "Product Support Operations Associate, Weekend Shift",
+      "location": "Bengaluru",
+      "portal": "Greenhouse",
+      "ats_score": "88%",
+      "url": "https://stripe.com/jobs/search?gh_jid=7975698"
+    },
+    {
+      "company": "Stripe",
+      "title": "Risk Operations Associate ",
+      "location": "Bengaluru",
+      "portal": "Greenhouse",
+      "ats_score": "88%",
+      "url": "https://stripe.com/jobs/search?gh_jid=5423044"
+    },
+    {
+      "company": "Stripe",
+      "title": "Social Media, Customer Support Associate",
+      "location": "Bengaluru",
+      "portal": "Greenhouse",
+      "ats_score": "88%",
+      "url": "https://stripe.com/jobs/search?gh_jid=7962437"
+    },
+    {
+      "company": "Stripe",
+      "title": "Software Engineer, Intern",
+      "location": "Bengaluru",
+      "portal": "Greenhouse",
+      "ats_score": "88%",
+      "url": "https://stripe.com/jobs/search?gh_jid=8031833"
+    },
+    {
+      "company": "Stripe",
+      "title": "Software Engineer, Internal Systems",
+      "location": "Bengaluru, India",
+      "portal": "Greenhouse",
+      "ats_score": "88%",
+      "url": "https://stripe.com/jobs/search?gh_jid=7543868"
+    },
+    {
+      "company": "Stripe",
+      "title": "Software Engineer, Metronome Infrastructure",
+      "location": "Toronto, Vancouver, Canada-Remote",
+      "portal": "Greenhouse",
+      "ats_score": "88%",
+      "url": "https://stripe.com/jobs/search?gh_jid=7737237"
+    },
+    {
+      "company": "Stripe",
+      "title": "Software Engineer, Vulnerability Management",
+      "location": "US - Remote",
+      "portal": "Greenhouse",
+      "ats_score": "88%",
+      "url": "https://stripe.com/jobs/search?gh_jid=8089353"
+    },
+    {
+      "company": "Stripe",
+      "title": "Voice Support Operations Associate ",
+      "location": "Bengaluru",
+      "portal": "Greenhouse",
+      "ats_score": "88%",
+      "url": "https://stripe.com/jobs/search?gh_jid=8168793"
+    },
+    {
+      "company": "Affirm",
+      "title": "Analyst II, Full Stack (Revenue Analytics)",
+      "location": "Remote Spain",
+      "portal": "Greenhouse",
+      "ats_score": "88%",
+      "url": "https://job-boards.greenhouse.io/affirm/jobs/7916080003"
+    },
+    {
+      "company": "Affirm",
+      "title": "Analyst II, Full Stack (Revenue Analytics)",
+      "location": "Remote Poland",
+      "portal": "Greenhouse",
+      "ats_score": "88%",
+      "url": "https://job-boards.greenhouse.io/affirm/jobs/7813362003"
+    },
+    {
+      "company": "Affirm",
+      "title": "Customer Advocacy Associate II",
+      "location": "Remote US",
+      "portal": "Greenhouse",
+      "ats_score": "88%",
+      "url": "https://job-boards.greenhouse.io/affirm/jobs/7907787003"
+    },
+    {
+      "company": "Affirm",
+      "title": "Software Engineer I, Backend (Collections)",
+      "location": "Remote Poland",
+      "portal": "Greenhouse",
+      "ats_score": "88%",
+      "url": "https://job-boards.greenhouse.io/affirm/jobs/7807508003"
+    },
+    {
+      "company": "Affirm",
+      "title": "Software Engineer I, Backend (Collections)",
+      "location": "Remote Spain",
+      "portal": "Greenhouse",
+      "ats_score": "88%",
+      "url": "https://job-boards.greenhouse.io/affirm/jobs/7807506003"
+    },
+    {
+      "company": "Affirm",
+      "title": "Software Engineer I, Frontend (Upfunnel)",
+      "location": "Remote Canada",
+      "portal": "Greenhouse",
+      "ats_score": "88%",
+      "url": "https://job-boards.greenhouse.io/affirm/jobs/7985907003"
+    },
+    {
+      "company": "Affirm",
+      "title": "Software Engineer I, Fullstack (Servicing International)",
+      "location": "Remote Spain",
+      "portal": "Greenhouse",
+      "ats_score": "88%",
+      "url": "https://job-boards.greenhouse.io/affirm/jobs/7809763003"
+    },
+    {
+      "company": "Affirm",
+      "title": "Software Engineer I, Fullstack (Servicing International)",
+      "location": "Remote Poland",
+      "portal": "Greenhouse",
+      "ats_score": "88%",
+      "url": "https://job-boards.greenhouse.io/affirm/jobs/7809761003"
+    },
+    {
+      "company": "Affirm",
+      "title": "Software Engineer II",
+      "location": "Remote Canada",
+      "portal": "Greenhouse",
+      "ats_score": "88%",
+      "url": "https://job-boards.greenhouse.io/affirm/jobs/7981805003"
+    },
+    {
+      "company": "Affirm",
+      "title": "Software Engineer II, Back-end (Card Mgmt & Transaction Processing)",
+      "location": "Remote US",
+      "portal": "Greenhouse",
+      "ats_score": "88%",
+      "url": "https://job-boards.greenhouse.io/affirm/jobs/7766277003"
+    },
+    {
+      "company": "Affirm",
+      "title": "Software Engineer II, Back-end (Card Mgmt & Transaction Processing)",
+      "location": "Remote Canada",
+      "portal": "Greenhouse",
+      "ats_score": "88%",
+      "url": "https://job-boards.greenhouse.io/affirm/jobs/7777094003"
+    },
+    {
+      "company": "Affirm",
+      "title": "Software Engineer II, Backend (Collections)",
+      "location": "Remote Spain",
+      "portal": "Greenhouse",
+      "ats_score": "88%",
+      "url": "https://job-boards.greenhouse.io/affirm/jobs/7813157003"
+    },
+    {
+      "company": "Affirm",
+      "title": "Software Engineer II, Backend (Collections)",
+      "location": "Remote Poland",
+      "portal": "Greenhouse",
+      "ats_score": "88%",
+      "url": "https://job-boards.greenhouse.io/affirm/jobs/7813159003"
+    },
+    {
+      "company": "Affirm",
+      "title": "Software Engineer II , Backend, (Furnishing Platform) ",
+      "location": "Remote Spain",
+      "portal": "Greenhouse",
+      "ats_score": "88%",
+      "url": "https://job-boards.greenhouse.io/affirm/jobs/7799346003"
+    },
+    {
+      "company": "Affirm",
+      "title": "Software Engineer II, Backend (Furnishing Platform) ",
+      "location": "Remote Poland",
+      "portal": "Greenhouse",
+      "ats_score": "88%",
+      "url": "https://job-boards.greenhouse.io/affirm/jobs/7799348003"
+    },
+    {
+      "company": "Affirm",
+      "title": "Software Engineer II, Backend (Post-Transaction)",
+      "location": "Remote US",
+      "portal": "Greenhouse",
+      "ats_score": "88%",
+      "url": "https://job-boards.greenhouse.io/affirm/jobs/7981803003"
+    },
+    {
+      "company": "Affirm",
+      "title": "Software Engineer II, Backend (Recoveries)  ",
+      "location": "Remote Spain",
+      "portal": "Greenhouse",
+      "ats_score": "88%",
+      "url": "https://job-boards.greenhouse.io/affirm/jobs/7854606003"
+    },
+    {
+      "company": "Affirm",
+      "title": "Software Engineer II, Backend (Recoveries)  ",
+      "location": "Remote Poland",
+      "portal": "Greenhouse",
+      "ats_score": "88%",
+      "url": "https://job-boards.greenhouse.io/affirm/jobs/7854608003"
+    },
+    {
+      "company": "Affirm",
+      "title": "Software Engineer II, Backend (Test Infra)",
+      "location": "Remote Canada",
+      "portal": "Greenhouse",
+      "ats_score": "88%",
+      "url": "https://job-boards.greenhouse.io/affirm/jobs/7727322003"
+    },
+    {
+      "company": "Affirm",
+      "title": "Software Engineer II, Backend (Test Infra)",
+      "location": "Remote US",
+      "portal": "Greenhouse",
+      "ats_score": "88%",
+      "url": "https://job-boards.greenhouse.io/affirm/jobs/7727320003"
+    },
+    {
+      "company": "Affirm",
+      "title": "Software Engineer II, Fullstack (App Experience)",
+      "location": "Remote US",
+      "portal": "Greenhouse",
+      "ats_score": "88%",
+      "url": "https://job-boards.greenhouse.io/affirm/jobs/7819445003"
+    },
+    {
+      "company": "Affirm",
+      "title": "Software Engineer II, Fullstack (App Experience)",
+      "location": "Remote Canada",
+      "portal": "Greenhouse",
+      "ats_score": "88%",
+      "url": "https://job-boards.greenhouse.io/affirm/jobs/7819447003"
+    },
+    {
+      "company": "Affirm",
+      "title": "Software Engineer II, Fullstack (International)",
+      "location": "Remote UK",
+      "portal": "Greenhouse",
+      "ats_score": "88%",
+      "url": "https://job-boards.greenhouse.io/affirm/jobs/7854835003"
+    },
+    {
+      "company": "Affirm",
+      "title": "Software Engineer II (Money Movement & Card Ledger)",
+      "location": "Remote Canada",
+      "portal": "Greenhouse",
+      "ats_score": "88%",
+      "url": "https://job-boards.greenhouse.io/affirm/jobs/7779962003"
+    }
+  ]
+}
