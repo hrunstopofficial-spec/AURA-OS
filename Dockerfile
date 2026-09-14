@@ -31,5 +31,5 @@ COPY . .
 HEALTHCHECK --interval=30s --timeout=10s --start-period=10s --retries=3 \
   CMD python -c "import urllib.request; exit(0)"
 
-# Start 24/7 Telegram & Autonomous Gateway
-CMD ["python", "-u", "tools/telegram_bridge.py"]
+# Start 24/7 Telegram Bridge Daemon in background AND Uvicorn Web Server on $PORT
+CMD sh -c "python -u tools/telegram_bridge.py & exec uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-10000}"
