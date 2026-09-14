@@ -101,8 +101,8 @@ jarvis_attachments/
 Thumbs.db
 desktop.ini
 
-# IDEs
-.idea/
-.vscode/
-*.swp
-*.swo
+# Environments and secrets
+.env
+.env.*
+*.log
+logs/

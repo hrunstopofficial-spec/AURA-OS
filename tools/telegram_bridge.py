@@ -898,42 +898,27 @@ async def _send_reply_safely(update: Update, text: str):
             except Exception as ex:
                 logger.error(f"Error delivering Telegram message: {ex}")
 
-AGY_BINARY_PATH = r"C:\Users\mukil\AppData\Local\agy\bin\agy.exe"
-
-async def query_antigravity(prompt: str) -> str:
-    """Executes prompt directly on Google Antigravity CLI and returns response."""
-    cmd = [
-        AGY_BINARY_PATH,
-        "--continue",
-        "--prompt",
-        prompt,
-        "--output-format",
-        "text",
-        "--dangerously-skip-permissions"
-    ]
+async def query_antigravity(prompt: str, user_name: str = "Mukil") -> str:
+    """
+    Executes prompt through the Cloud Antigravity Cognitive Brain (ServerRouter + Groq/Gemini).
+    Zero physical PC access, zero local disk blocking, pure online cloud execution.
+    """
     try:
-        proc = await asyncio.to_thread(
-            subprocess.run,
-            cmd,
-            cwd=r"C:\Users\mukil",
-            capture_output=True,
-            text=True,
-            timeout=180,
-            encoding="utf-8",
-            errors="replace"
+        history = mem.get_recent_conversations(limit=6)
+        history_formatted = [
+            {"role": "user" if h.get("sender") != "JARVIS" else "assistant", "content": h.get("text", "")}
+            for h in history
+        ]
+        router_resp = await asyncio.to_thread(
+            server_router.handle_message,
+            prompt,
+            conversation_history=history_formatted,
+            user_name=user_name
         )
-        out = (proc.stdout or proc.stderr or "").strip()
-        if not out and proc.returncode != 0:
-            out = f"Antigravity CLI error: {proc.stderr}"
-        return out or "Done."
+        return router_resp.reply
     except Exception as e:
-        logger.error(f"Error querying Antigravity: {e}")
-        # Fallback to server router if CLI fails
-        try:
-            fallback_resp = await asyncio.to_thread(server_router.handle_message, prompt)
-            return fallback_resp.reply
-        except Exception:
-            return f"⚠️ Antigravity bridge error: {e}"
+        logger.error(f"Cloud brain execution error: {e}")
+        return f"⚠️ Cloud brain issue: {e}"
 
 async def voice_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_name = update.effective_user.first_name or "Mukil"

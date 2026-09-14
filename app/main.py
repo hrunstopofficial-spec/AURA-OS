@@ -30,15 +30,19 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
 
     # Start 24/7 Telegram Bridge Daemon when deployed to Cloud / Production
     telegram_process = None
+    from config import TELEGRAM_BOT_TOKEN
+    token = os.getenv("TELEGRAM_BOT_TOKEN") or TELEGRAM_BOT_TOKEN
     is_cloud = bool(os.getenv("RENDER") or settings.ENVIRONMENT == "production" or os.getenv("RUN_TELEGRAM_BOT") == "true")
-    if is_cloud and os.getenv("TELEGRAM_BOT_TOKEN"):
+    if is_cloud and token:
         bridge_script = os.path.join(os.path.dirname(os.path.dirname(__file__)), "tools", "telegram_bridge.py")
         if os.path.exists(bridge_script):
             logger.info("🚀 Starting 24/7 Telegram Bridge Daemon on Cloud Container...")
             try:
                 import subprocess
                 import sys
-                telegram_process = subprocess.Popen([sys.executable, "-u", bridge_script])
+                sub_env = os.environ.copy()
+                sub_env["TELEGRAM_BOT_TOKEN"] = token
+                telegram_process = subprocess.Popen([sys.executable, "-u", bridge_script], env=sub_env)
                 logger.info(f"✅ Telegram Bridge Daemon running with PID: {telegram_process.pid}")
             except Exception as e:
                 logger.error(f"Failed to launch Telegram Bridge Daemon: {e}")
@@ -85,7 +89,7 @@ def create_app() -> FastAPI:
     @app.get("/", tags=["Root"])
     async def root_hub(request: Request):
         accept_header = request.headers.get("accept", "")
-        if "text/html" in accept_header and "application/json" not in accept_header:
+        if "text/html" in accept_header:
             hub_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "jarvis_mobile_hub.html")
             if os.path.exists(hub_path):
                 with open(hub_path, "r", encoding="utf-8") as f:

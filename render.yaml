@@ -13,14 +13,10 @@ services:
         value: production
       - key: APP_NAME
         value: AURA-OS | Autonomous JARVIS Hub
-      - key: GROQ_API_KEY
-        sync: false
-      - key: TELEGRAM_BOT_TOKEN
-        sync: false
+      - key: RUN_TELEGRAM_BOT
+        value: "true"
       - key: TELEGRAM_AUTHORIZED_USER_ID
         value: "6233907249"
-      - key: GEMINI_API_KEY
-        sync: false
       - key: CORS_ORIGINS
         value: '["*"]'
       - key: HOST
