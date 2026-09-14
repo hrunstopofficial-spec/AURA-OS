@@ -19,6 +19,10 @@ WORKDIR /app
 # Install Python requirements
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt \
+    beautifulsoup4 \
+    requests \
+    qrcode \
+    Pillow \
     google-auth \
     google-auth-oauthlib \
     google-api-python-client \

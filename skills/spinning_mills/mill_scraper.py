@@ -8,8 +8,12 @@ import re
 import csv
 import json
 import logging
-import requests
-from bs4 import BeautifulSoup
+try:
+    import requests
+    from bs4 import BeautifulSoup
+except ImportError:
+    requests = None
+    BeautifulSoup = None
 from typing import Dict, Any, List, Optional
 from datetime import datetime, timezone
 
