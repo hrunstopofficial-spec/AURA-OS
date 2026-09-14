@@ -5,7 +5,7 @@ Pydantic V2 Compatible.
 """
 from enum import Enum
 from typing import Dict, Any, Optional, Union, Literal, Annotated
-from pydantic import BaseModel, Field, HttpUrl, model_validator
+from pydantic import BaseModel, Field, HttpUrl, model_validator, field_serializer, TypeAdapter
 import os
 import json
 import uuid
@@ -40,6 +40,7 @@ class PreapprovedScriptId(str, Enum):
     RESTART_TELEGRAM_BRIDGE = "restart_telegram_bridge"
     FLUSH_DNS_CACHE = "flush_dns_cache"
     SGC_BACKUP_SNAPSHOT = "sgc_backup_snapshot"
+    ROBOFORM_AUTOFILL_TEST = "roboform_autofill_test"
 
 
 # =====================================================================
@@ -64,6 +65,10 @@ class OpenBrowserUrlPayload(BaseModel):
     action: Literal["open_browser_url"] = "open_browser_url"
     url: HttpUrl  # Strictly blocks file:///, local admin panels, and invalid URIs
     new_window: bool = False
+
+    @field_serializer("url")
+    def serialize_url(self, url: Any, _info):
+        return str(url)
 
 
 class LaunchSgcBillingPayload(BaseModel):
@@ -145,6 +150,16 @@ class TaskRequest(BaseModel):
     timeout_seconds: int = Field(default=60, ge=5, le=600)
     retry_count: int = Field(default=0, ge=0)
     auth_signature: str = ""
+
+    @model_validator(mode="before")
+    @classmethod
+    def parse_payload_discriminated(cls, data: Any) -> Any:
+        if isinstance(data, dict):
+            route = data.get("route")
+            payload = data.get("payload")
+            if (route == TaskRoute.LOCAL_SYSTEM or route == TaskRoute.LOCAL_SYSTEM.value) and isinstance(payload, dict):
+                data["payload"] = TypeAdapter(LocalActionPayload).validate_python(payload)
+        return data
 
     @model_validator(mode="after")
     def validate_request_integrity(self) -> "TaskRequest":

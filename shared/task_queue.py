@@ -61,8 +61,13 @@ class TaskQueueManager:
         Enqueues an idempotent TaskRequest into the SQLite queue.
         If idempotency_key already exists, returns existing task_id.
         """
-        payload_dict = task_req.payload if isinstance(task_req.payload, dict) else task_req.payload.model_dump()
-        payload_str = json.dumps(payload_dict)
+        if isinstance(task_req.payload, dict):
+            payload_dict = task_req.payload
+        elif hasattr(task_req.payload, "model_dump"):
+            payload_dict = task_req.payload.model_dump(mode="json")
+        else:
+            payload_dict = dict(task_req.payload)
+        payload_str = json.dumps(payload_dict, default=str)
         created_at_str = task_req.created_at.isoformat()
 
         with self._get_connection() as conn:
@@ -128,7 +133,7 @@ class TaskQueueManager:
     def complete_task(self, task_id: str, result: TaskResult) -> bool:
         """Stores final execution result and marks task as SUCCESS or FAILED."""
         completed_at_str = result.completed_at.isoformat()
-        result_str = json.dumps(result.result_data)
+        result_str = json.dumps(result.result_data, default=str)
 
         with self._get_connection() as conn:
             cursor = conn.cursor()

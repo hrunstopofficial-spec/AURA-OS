@@ -155,7 +155,7 @@ class SafeSystemExecutor:
             task_id=task_id,
             original_user_request=f"System Agent Action: {action_name}",
             tool_name=action_name,
-            tool_params=payload_obj.model_dump() if hasattr(payload_obj, "model_dump") else payload_obj,
+            tool_params=payload_obj.model_dump(mode="json") if hasattr(payload_obj, "model_dump") else payload_obj,
             raw_result_data=raw_result_data if status == TaskStatus.SUCCESS else {"error": error_msg},
             executor_agent_id=self.agent_id,
             execution_time_ms=elapsed_ms

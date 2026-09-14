@@ -70,7 +70,12 @@ class HybridTaskDispatcher:
             raw_result: TaskResult = system_executor.process_task_request(task_req)
 
             # Two-layer verification pass
-            payload_dict = task_req.payload if isinstance(task_req.payload, dict) else task_req.payload.model_dump()
+            if isinstance(task_req.payload, dict):
+                payload_dict = task_req.payload
+            elif hasattr(task_req.payload, "model_dump"):
+                payload_dict = task_req.payload.model_dump(mode="json")
+            else:
+                payload_dict = dict(task_req.payload)
             verified_result = verifier.verify_task_result(
                 task_id=task_req.task_id,
                 original_user_request=user_request_text or f"Execute {tool_name}",

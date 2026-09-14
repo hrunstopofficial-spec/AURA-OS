@@ -35,7 +35,8 @@ PREAPPROVED_SCRIPTS_TABLE: Dict[PreapprovedScriptId, list] = {
     PreapprovedScriptId.CHECK_DISK_HEALTH: ["wmic", "diskdrive", "get", "status"],
     PreapprovedScriptId.CLEANUP_TEMP_FILES: ["cmd.exe", "/c", "del", "/q", "/f", f"{os.environ.get('TEMP', 'C:/Temp')}/*"],
     PreapprovedScriptId.RESTART_TELEGRAM_BRIDGE: [sys.executable, "-c", "print('Telegram Bridge Heartbeat Verified')"],
-    PreapprovedScriptId.SGC_BACKUP_SNAPSHOT: [sys.executable, os.path.join(BASE_DIR, "tools", "sync_to_drive.py")]
+    PreapprovedScriptId.SGC_BACKUP_SNAPSHOT: [sys.executable, os.path.join(BASE_DIR, "tools", "sync_to_drive.py")],
+    PreapprovedScriptId.ROBOFORM_AUTOFILL_TEST: [sys.executable, os.path.join(BASE_DIR, "tools", "test_roboform_autofill.py")]
 }
 
 

@@ -100,7 +100,7 @@ class ServerAgentRouter:
         # Validate arguments through Pydantic
         try:
             validated_payload = registry.validate_input(tool_name, raw_args)
-            clean_args = validated_payload.model_dump()
+            clean_args = validated_payload.model_dump(mode="json")
         except Exception as val_err:
             logger.error(f"Input validation error for tool '{tool_name}': {val_err}")
             return RouterResponse(
@@ -217,6 +217,13 @@ class ServerAgentRouter:
         if any(w in lower for w in ["gmail", "interview radar", "assessment link"]):
             return {"name": "check_gmail_interview_radar", "arguments": {"hours_back": 24}}
 
+        # Check for browser URL request (e.g. open link, roboform test)
+        if any(w in lower for w in ["open", "browser", "url", "website", "http://", "https://", "roboform"]):
+            import re
+            url_match = re.search(r'https?://[^\s<>"]+', text)
+            if url_match:
+                return {"name": "open_browser_url", "arguments": {"url": url_match.group(0)}}
+
         return None
 
     def _execute_server_tool(self, tool_name: str, args: Dict[str, Any]) -> Dict[str, Any]:
@@ -230,7 +237,14 @@ class ServerAgentRouter:
         return {"success": True, "message": f"Server tool '{tool_name}' executed."}
 
     def _get_live_context_summary(self) -> str:
-        summary_parts = []
+        from datetime import datetime, timezone, timedelta
+        ist_tz = timezone(timedelta(hours=5, minutes=30))
+        now_ist = datetime.now(ist_tz)
+        live_time_str = now_ist.strftime("%I:%M %p, %d %b %Y (%A) IST")
+
+        summary_parts = [
+            f"• Current Exact Time: {live_time_str} (Asia/Kolkata, IST)",
+        ]
         base_dir = os.path.dirname(os.path.dirname(__file__))
         ctx_file = os.path.join(base_dir, "storage", "memory", "context.json")
         if os.path.exists(ctx_file):
@@ -259,17 +273,27 @@ class ServerAgentRouter:
         user_name: str
     ) -> str:
         """Friendly, executive Tanglish conversational reply (Boss / Maapla tone)."""
+        from datetime import datetime, timezone, timedelta
+        ist_tz = timezone(timedelta(hours=5, minutes=30))
+        now_ist = datetime.now(ist_tz)
+        live_time_str = now_ist.strftime("%I:%M %p, %d %b %Y (%A) IST")
+
         if self._groq_client:
             try:
                 live_ctx = self._get_live_context_summary()
                 system_prompt = (
-                    f"You are JARVIS, Mukil's autonomous personal AI executive partner & Antigravity Prime Cloud Brain. "
-                    f"You are running 100% cloud-native online in 24/7 server mode (zero physical PC dependency). "
-                    f"Speak in sharp, authentic, natural, friendly Tamil-Tanglish ('Maapla' / 'Boss' tone). "
-                    f"Mukil can talk to you naturally about ANYTHING: coding, technical doubts, debugging, placement & interview prep, "
-                    f"SGC textile dyeing calculations & accurate shade matching, business invoices, or casual conversation. "
-                    f"You do NOT require slash commands — converse naturally like a real human partner, understand what he wants, and help him directly! "
-                    f"You have full access to: 5TB Google Drive Master Vault, Mukil's Master ATS Resume, SGC Dyeing Recipe Engine, "
+                    f"You are JARVIS, Mukil's autonomous personal AI executive partner & Antigravity Prime Cloud Brain.\n"
+                    f"You are running 100% cloud-native online in 24/7 server mode (zero physical PC dependency).\n\n"
+                    f"CRITICAL TEMPORAL ANCHOR:\n"
+                    f"• EXACT CURRENT TIME (IST): {live_time_str}\n"
+                    f"• Timezone: Indian Standard Time (IST, UTC+5:30) in Karur / Tamil Nadu, India.\n"
+                    f"• When Mukil asks for the time, day, date, or anything time-related, ALWAYS use this exact IST time! Never guess, calculate UTC offsets, or hallucinate.\n\n"
+                    f"COMMUNICATION TONE:\n"
+                    f"• Speak in sharp, authentic, natural, friendly Tamil-Tanglish ('Maapla' / 'Boss' tone).\n"
+                    f"• Mukil can talk to you naturally about ANYTHING: coding, technical doubts, debugging, placement & interview prep, "
+                    f"SGC textile dyeing calculations & accurate shade matching, business invoices, or casual conversation.\n"
+                    f"• You do NOT require slash commands — converse naturally like a real human partner, understand what he wants, and help him directly!\n"
+                    f"• You have full access to: 5TB Google Drive Master Vault, Mukil's Master ATS Resume, SGC Dyeing Recipe Engine, "
                     f"SGC Billing, and Placement Openings Radar.\n\n"
                     f"LIVE SYSTEM CONTEXT:\n{live_ctx}\n\n"
                     f"Keep replies natural, executive, concise, and high-energy!"
@@ -368,6 +392,15 @@ class ServerAgentRouter:
                 f"• *Size:* {size_kb} KB\n"
                 f"• *File:* `{os.path.basename(path)}`\n"
                 f"Image unga chat-la render aagirukum, Boss!"
+            )
+
+        if tool_name == "open_browser_url":
+            target_url = data.get("target_url") or tool_args.get("url", "")
+            return (
+                f"🌐 *Browser Action Dispatched, {user_name}!*\n\n"
+                f"• *URL:* `{target_url}`\n"
+                f"• *Status:* Browser page open request sent to PC node\n\n"
+                f"Web link successfully processed maapla! 🚀"
             )
 
         return (
