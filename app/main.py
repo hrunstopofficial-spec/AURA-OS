@@ -35,7 +35,20 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     is_cloud = bool(os.getenv("RENDER") or settings.ENVIRONMENT == "production" or os.getenv("RUN_TELEGRAM_BOT") == "true")
     if is_cloud and token:
         bridge_script = os.path.join(os.path.dirname(os.path.dirname(__file__)), "tools", "telegram_bridge.py")
-        if os.path.exists(bridge_script):
+        # Check if already active (e.g. launched via start_server.sh)
+        import psutil
+        already_running = False
+        try:
+            for p in psutil.process_iter(["cmdline"]):
+                cmd = p.info.get("cmdline") or []
+                if any("telegram_bridge.py" in str(arg) for arg in cmd) and p.pid != os.getpid():
+                    already_running = True
+                    logger.info(f"✅ Telegram Bridge is already active in background with PID: {p.pid}")
+                    break
+        except Exception:
+            pass
+
+        if not already_running and os.path.exists(bridge_script):
             logger.info("🚀 Starting 24/7 Telegram Bridge Daemon on Cloud Container...")
             try:
                 import subprocess
