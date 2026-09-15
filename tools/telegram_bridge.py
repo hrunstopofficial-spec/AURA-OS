@@ -9,7 +9,7 @@ from datetime import datetime, timedelta, timezone
 from typing import Optional, List, Dict, Any
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
-from config import TELEGRAM_BOT_TOKEN, GROQ_API_KEY, DRIVE_VAULT_URL
+from config import TELEGRAM_BOT_TOKEN, GROQ_API_KEY, DRIVE_VAULT_URL, AUTHORIZED_TELEGRAM_USERS
 from memory.memory_manager import MemoryManager
 from brain.agent_brain import AgentBrain
 from server_agent.router import server_router
@@ -23,6 +23,24 @@ from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, fil
 
 logging.basicConfig(format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO)
 logger = logging.getLogger(__name__)
+
+def is_authorized(update: Update) -> bool:
+    if not update or not update.effective_user:
+        return False
+    user_id = update.effective_user.id
+    if AUTHORIZED_TELEGRAM_USERS and user_id not in AUTHORIZED_TELEGRAM_USERS:
+        logger.warning(f"🚫 BLOCKED UNAUTHORIZED USER: ID {user_id} (@{update.effective_user.username})")
+        return False
+    return True
+
+def auth_guard(handler_func):
+    async def wrapped(update: Update, context: ContextTypes.DEFAULT_TYPE):
+        if not is_authorized(update):
+            return
+        return await handler_func(update, context)
+    return wrapped
+
+
 
 async def global_error_handler(update: object, context: ContextTypes.DEFAULT_TYPE):
     logger.error(f"Exception while handling Telegram update: {context.error}", exc_info=context.error)
@@ -78,6 +96,8 @@ async def on_reminder_triggered(reminder: Dict[str, Any]):
 reminder_scheduler.set_callback(on_reminder_triggered)
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    if not is_authorized(update):
+        return
     user_name = update.effective_user.first_name
     mem.log_task("TELEGRAM_START", f"User {user_name} started Telegram conversation")
     
@@ -612,6 +632,136 @@ async def shade_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE):
         logger.error(f"Shade calculation error: {e}")
         await update.message.reply_text(f"❌ Recipe calculation error: {e}")
 
+async def color_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Matches any Hex / RGB color code against Pantone TCX & SGC database with dye prediction."""
+    args = context.args
+    if not args:
+        help_text = (
+            "🎯 *SGC COLOR FINDER & SHADE MATCHER*\n\n"
+            "Usage:\n"
+            "• `/findcolor <hex_code> [fabric_kg]`\n"
+            "  _Example:_ `/findcolor #1B2F4D`\n"
+            "  _Example:_ `/findcolor #BF1932 500`\n"
+            "• `/findcolor <r> <g> <b> [fabric_kg]`\n"
+            "  _Example:_ `/findcolor 27 47 77 250`\n\n"
+            "💡 _You can also just send a PHOTO of any fabric/yarn swatch directly to this chat!_"
+        )
+        await update.message.reply_text(help_text, parse_mode="Markdown")
+        return
+
+    try:
+        fabric_kg = 250.0
+        from tools.sgc_color_finder import solve_swatch_full_solution, format_color_solution_telegram
+
+        if args[0].startswith("#") or len(args[0]) in (6, 7):
+            target = args[0] if args[0].startswith("#") else f"#{args[0]}"
+            if len(args) >= 2:
+                fabric_kg = float(args[1])
+            res = solve_swatch_full_solution(target, fabric_kg=fabric_kg)
+        elif len(args) >= 3:
+            r, g, b = int(args[0]), int(args[1]), int(args[2])
+            if len(args) >= 4:
+                fabric_kg = float(args[3])
+            res = solve_swatch_full_solution((r, g, b), fabric_kg=fabric_kg)
+        else:
+            target = args[0]
+            res = solve_swatch_full_solution(target, fabric_kg=fabric_kg)
+
+        report = format_color_solution_telegram(res)
+        await _send_reply_safely(update, report)
+
+        if ALWAYS_VOICE_REPLY:
+            p_name = res["best_pantone_match"]["name"]
+            p_code = res["best_pantone_match"]["code"]
+            cost = res["industrial_batch_recipe"]["financials"]["cost_per_kg_fabric_inr"]
+            voice_text = f"Maapla, colour find panniten! Closest match Pantone {p_name} ({p_code}). Chemical recipe calculation ready, cost around {cost} rupees per kg."
+            try:
+                voice_path = await generate_voice_audio(voice_text)
+                if os.path.exists(voice_path):
+                    with open(voice_path, "rb") as v:
+                        await update.message.reply_voice(voice=v, caption="🎨 Color Match Voice Note")
+                    os.remove(voice_path)
+            except Exception:
+                pass
+
+    except Exception as e:
+        logger.error(f"Color finder error: {e}")
+        await update.message.reply_text(f"❌ Color Finder error: {e}")
+
+async def photo_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Automatically analyzes uploaded fabric swatch photos and generates chemical dyeing recipes."""
+    if not is_authorized(update):
+        return
+    user_name = update.effective_user.first_name or "Mukil"
+    logger.info(f"Received photo from {user_name}, processing swatch color analysis...")
+
+    await update.effective_chat.send_action("typing")
+
+    photo = None
+    if update.message.photo:
+        photo = update.message.photo[-1]
+    elif update.message.document and update.message.document.mime_type and update.message.document.mime_type.startswith("image/"):
+        photo = update.message.document
+
+    if not photo:
+        return
+
+    try:
+        swatches_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "storage", "swatches")
+        os.makedirs(swatches_dir, exist_ok=True)
+        save_path = os.path.join(swatches_dir, "latest_swatch.jpg")
+
+        p_file = await context.bot.get_file(photo.file_id)
+        await p_file.download_to_drive(save_path)
+
+        # Parse fabric weight from caption if given
+        caption = update.message.caption or ""
+        fabric_kg = 250.0
+        match_kg = re.search(r'(\d+(?:\.\d+)?)\s*(?:kg|kilo)', caption, re.IGNORECASE)
+        if match_kg:
+            fabric_kg = float(match_kg.group(1))
+
+        await update.message.reply_text(f"🔬 *Analyzing Fabric Swatch...*\nFiltering shadows, glare, and computing CIEDE2000 Pantone & Reactive Recipe for `{fabric_kg} kg` lot...", parse_mode="Markdown")
+
+        from tools.sgc_color_finder import solve_swatch_full_solution, format_color_solution_telegram
+        res = solve_swatch_full_solution(save_path, fabric_kg=fabric_kg)
+        report = format_color_solution_telegram(res)
+
+        await _send_reply_safely(update, report)
+
+        # Log to memory
+        p = res["best_pantone_match"]
+        c = res["extracted_color"]
+        mem.log_task("SWATCH_COLOR_MATCH", f"Analyzed swatch photo. Matched: {p['name']} ({p['code']}), Hex: {c['hex']}, Lot: {fabric_kg}kg")
+        mem.update_context({
+            "latest_swatch_match": {
+                "hex": c["hex"],
+                "pantone": f"{p['name']} ({p['code']})",
+                "delta_e": p["delta_e"],
+                "fabric_kg": fabric_kg,
+                "timestamp": datetime.now().isoformat()
+            }
+        })
+
+        if ALWAYS_VOICE_REPLY:
+            cost = res["industrial_batch_recipe"]["financials"]["cost_per_kg_fabric_inr"]
+            voice_summary = (
+                f"Maapla, unga swatch photo-va analyze panniten! Indha color Pantone {p['name']} kooda match aagudhu. "
+                f"Delta E romba accurate-ah irukku. {fabric_kg} kg lot-ku full chemical recipe calculation anuppitten. Cost {cost} rupees per kg!"
+            )
+            try:
+                voice_path = await generate_voice_audio(voice_summary)
+                if os.path.exists(voice_path):
+                    with open(voice_path, "rb") as v:
+                        await update.message.reply_voice(voice=v, caption="🎙️ Swatch Analysis Summary")
+                    os.remove(voice_path)
+            except Exception:
+                pass
+
+    except Exception as e:
+        logger.error(f"Swatch photo processing error: {e}", exc_info=True)
+        await update.message.reply_text(f"❌ Error analyzing swatch photo: {e}")
+
 async def menu_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Full Command Center Menu."""
     menu_text = (
@@ -855,6 +1005,16 @@ async def handle_direct_shortcuts(text: str, update: Update, context: ContextTyp
             except Exception as re:
                 logger.error(f"Failed to auto-send resume document: {re}")
 
+    # 6. Smart Color Finder shortcut
+    hex_match = re.search(r'#([A-Fa-f0-9]{6})\b', text)
+    if hex_match or any(k in t_lower for k in ["color find", "colour find", "shade find", "color match", "match color", "pantone match"]):
+        if hex_match:
+            context.args = [f"#{hex_match.group(1)}"]
+        else:
+            context.args = text.split()
+        await color_cmd(update, context)
+        return True
+
     return False
 
 
@@ -921,6 +1081,8 @@ async def query_antigravity(prompt: str, user_name: str = "Mukil") -> str:
         return f"⚠️ Cloud brain issue: {e}"
 
 async def voice_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    if not is_authorized(update):
+        return
     user_name = update.effective_user.first_name or "Mukil"
     voice = update.message.voice or update.message.audio
     
@@ -984,6 +1146,8 @@ async def voice_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text(f"❌ Voice processing error: {str(e)}")
 
 async def chat_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    if not is_authorized(update):
+        return
     user_text = update.message.text
     if not user_text:
         return
@@ -1071,50 +1235,58 @@ def build_app():
         .build()
     )
     
-    app.add_handler(CommandHandler("start", start))
-    app.add_handler(CommandHandler("status", status_cmd))
-    app.add_handler(CommandHandler("diagnose", diagnose_cmd))
-    app.add_handler(CommandHandler("vitals", diagnose_cmd))
-    app.add_handler(CommandHandler("drive", drive_cmd))
-    app.add_handler(CommandHandler("find", find_cmd))
-    app.add_handler(CommandHandler("search", find_cmd))
-    app.add_handler(CommandHandler("apply", apply_cmd))
-    app.add_handler(CommandHandler("code", code_cmd))
-    app.add_handler(CommandHandler("aura", code_cmd))
-    app.add_handler(CommandHandler("antigravity", code_cmd))
-    app.add_handler(CommandHandler("agy", code_cmd))
-    app.add_handler(CommandHandler("cmd", terminal_cmd))
-    app.add_handler(CommandHandler("terminal", terminal_cmd))
-    app.add_handler(CommandHandler("linkedin", linkedin_cmd))
-    app.add_handler(CommandHandler("proofs", proofs_cmd))
-    app.add_handler(CommandHandler("bill", bill_cmd))
-    app.add_handler(CommandHandler("newbill", bill_cmd))
-    app.add_handler(CommandHandler("remind", remind_cmd))
-    app.add_handler(CommandHandler("reminders", reminders_cmd))
-    app.add_handler(CommandHandler("alarms", reminders_cmd))
-    app.add_handler(CommandHandler("cancelremind", cancelremind_cmd))
-    app.add_handler(CommandHandler("delremind", cancelremind_cmd))
-    app.add_handler(CommandHandler("overdue", overdue_cmd))
-    app.add_handler(CommandHandler("sgcoverdue", overdue_cmd))
-    app.add_handler(CommandHandler("note", note_cmd))
-    app.add_handler(CommandHandler("notes", notes_cmd))
-    app.add_handler(CommandHandler("delnote", delnote_cmd))
-    app.add_handler(CommandHandler("drill", drill_cmd))
-    app.add_handler(CommandHandler("dsa", drill_cmd))
-    app.add_handler(CommandHandler("apti", drill_cmd))
-    app.add_handler(CommandHandler("solve", solve_cmd))
-    app.add_handler(CommandHandler("radar", radar_cmd))
-    app.add_handler(CommandHandler("jobs", radar_cmd))
-    app.add_handler(CommandHandler("placement", radar_cmd))
-    app.add_handler(CommandHandler("resume", resume_cmd))
-    app.add_handler(CommandHandler("cv", resume_cmd))
-    app.add_handler(CommandHandler("shade", shade_cmd))
-    app.add_handler(CommandHandler("recipe", shade_cmd))
-    app.add_handler(CommandHandler("tenses", tenses_cmd))
-    app.add_handler(CommandHandler("sgc", sgc_cmd))
-    app.add_handler(CommandHandler("fundmycrazy", fund_cmd))
-    app.add_handler(CommandHandler("menu", menu_cmd))
-    app.add_handler(CommandHandler("help", menu_cmd))
+    def add_cmd(name, fn):
+        app.add_handler(CommandHandler(name, auth_guard(fn)))
+
+    add_cmd("start", start)
+    add_cmd("status", status_cmd)
+    add_cmd("diagnose", diagnose_cmd)
+    add_cmd("vitals", diagnose_cmd)
+    add_cmd("drive", drive_cmd)
+    add_cmd("find", find_cmd)
+    add_cmd("search", find_cmd)
+    add_cmd("apply", apply_cmd)
+    add_cmd("code", code_cmd)
+    add_cmd("aura", code_cmd)
+    add_cmd("antigravity", code_cmd)
+    add_cmd("agy", code_cmd)
+    add_cmd("cmd", terminal_cmd)
+    add_cmd("terminal", terminal_cmd)
+    add_cmd("linkedin", linkedin_cmd)
+    add_cmd("proofs", proofs_cmd)
+    add_cmd("bill", bill_cmd)
+    add_cmd("newbill", bill_cmd)
+    add_cmd("remind", remind_cmd)
+    add_cmd("reminders", reminders_cmd)
+    add_cmd("alarms", reminders_cmd)
+    add_cmd("cancelremind", cancelremind_cmd)
+    add_cmd("delremind", cancelremind_cmd)
+    add_cmd("overdue", overdue_cmd)
+    add_cmd("sgcoverdue", overdue_cmd)
+    add_cmd("note", note_cmd)
+    add_cmd("notes", notes_cmd)
+    add_cmd("delnote", delnote_cmd)
+    add_cmd("drill", drill_cmd)
+    add_cmd("dsa", drill_cmd)
+    add_cmd("apti", drill_cmd)
+    add_cmd("solve", solve_cmd)
+    add_cmd("radar", radar_cmd)
+    add_cmd("jobs", radar_cmd)
+    add_cmd("placement", radar_cmd)
+    add_cmd("resume", resume_cmd)
+    add_cmd("cv", resume_cmd)
+    add_cmd("shade", shade_cmd)
+    add_cmd("recipe", shade_cmd)
+    add_cmd("findcolor", color_cmd)
+    add_cmd("color", color_cmd)
+    add_cmd("match", color_cmd)
+    add_cmd("swatch", color_cmd)
+    add_cmd("tenses", tenses_cmd)
+    add_cmd("sgc", sgc_cmd)
+    add_cmd("fundmycrazy", fund_cmd)
+    add_cmd("menu", menu_cmd)
+    add_cmd("help", menu_cmd)
+    app.add_handler(MessageHandler(filters.PHOTO | filters.Document.IMAGE, photo_handler))
     app.add_handler(MessageHandler(filters.VOICE | filters.AUDIO, voice_handler))
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, chat_handler))
     app.add_error_handler(global_error_handler)
