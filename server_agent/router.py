@@ -234,6 +234,26 @@ class ServerAgentRouter:
                 max_results=args.get("max_results", 10),
                 yarn_type=args.get("yarn_type")
             )
+        elif tool_name == "create_sgc_bill":
+            from tools.sgc_invoice_creator import create_sgc_bill
+            return create_sgc_bill(
+                customer=args.get("customer", "Valued Customer"),
+                variety=args.get("variety", "cone winding"),
+                count=args.get("count", "10s"),
+                kattu=float(args.get("kattu", 0)),
+                kazhi=float(args.get("kazhi", 0)),
+                rate=float(args.get("rate", 0)),
+                po_no=args.get("po_no", ""),
+                party_gst=args.get("party_gst", "")
+            )
+        elif tool_name == "execute_python_code":
+            from server_agent.codeact_runner import codeact_runner
+            res = codeact_runner.execute_code(
+                code_string=args.get("code", ""),
+                task_label=args.get("task_label", "cloud_task")
+            )
+            return res.model_dump(mode="json")
+
         return {"success": True, "message": f"Server tool '{tool_name}' executed."}
 
     def _get_live_context_summary(self) -> str:
@@ -278,6 +298,16 @@ class ServerAgentRouter:
         now_ist = datetime.now(ist_tz)
         live_time_str = now_ist.strftime("%I:%M %p, %d %b %Y (%A) IST")
 
+        # 1. Primary Cognitive Brain: Cloud Twin (Gemini 3.6 Flash)
+        try:
+            from cloud.cloud_twin_agent import cloud_twin
+            twin_res = cloud_twin.process_prompt(text, conversation_history)
+            if twin_res and twin_res.get("reply"):
+                return twin_res["reply"]
+        except Exception as twin_err:
+            logger.warning(f"Cloud Twin fallback to Groq: {twin_err}")
+
+        # 2. Secondary Brain Fallback: Groq GPT-OSS 120B
         if self._groq_client:
             try:
                 live_ctx = self._get_live_context_summary()
@@ -401,6 +431,46 @@ class ServerAgentRouter:
                 f"• *URL:* `{target_url}`\n"
                 f"• *Status:* Browser page open request sent to PC node\n\n"
                 f"Web link successfully processed maapla! 🚀"
+            )
+
+        if tool_name == "create_sgc_bill":
+            bill_no = data.get("billNo", "N/A")
+            customer = data.get("customer", "Customer")
+            net_amt = data.get("netAmount", 0)
+            sub = data.get("subtotal", 0)
+            cgst = data.get("cgst", 0)
+            sgst = data.get("sgst", 0)
+            pdf_path = data.get("pdf_path", "")
+            drive_link = data.get("drive_link", "")
+
+            drive_part = f"\n• *Drive Vault Link:* [Open in Master Bills Vault]({drive_link})" if drive_link else ""
+            pdf_file_part = f"\n• *PDF Document:* `{os.path.basename(pdf_path)}`" if pdf_path else ""
+
+            return (
+                f"🧾 *SRI GANAPATHI COLOURS — TAX INVOICE #{bill_no} CREATED!*\n\n"
+                f"• *Customer:* {customer}\n"
+                f"• *Subtotal (Taxable):* ₹{sub:,.2f}\n"
+                f"• *GST (5% Total):* ₹{(cgst + sgst):,.2f} _(CGST ₹{cgst:,.2f} + SGST ₹{sgst:,.2f})_\n"
+                f"• *Net Amount:* *₹{net_amt:,.2f}*\n"
+                f"{pdf_file_part}"
+                f"{drive_part}\n\n"
+                f"🏛️ *Bank Details (CSB Bank) Included* | Ready for Print & Auditor filing!\n"
+                f"Proof Screenshot / PDF: `{pdf_path}`"
+            )
+
+        if tool_name == "execute_python_code":
+            status = data.get("status", "completed")
+            stdout = data.get("stdout", "").strip()
+            stderr = data.get("stderr", "").strip()
+            output_prev = stdout or stderr or "Code executed with 0 output."
+            if len(output_prev) > 1000:
+                output_prev = output_prev[:1000] + "\n... [Output Truncated]"
+
+            return (
+                f"🦾 *Antigravity Cloud Code Execution — {status.upper()}!*\n\n"
+                f"```\n{output_prev}\n```\n"
+                f"• *Execution Time:* {verified_result.execution_time_ms}ms\n"
+                f"• *Sandbox:* `{data.get('sandbox_dir', 'Cloud Container')}`"
             )
 
         return (

@@ -1231,8 +1231,8 @@ async def handle_direct_shortcuts(text: str, update: Update, context: ContextTyp
                         parse_mode="Markdown"
                     )
                 return True
-            except Exception as re:
-                logger.error(f"Failed to auto-send resume document: {re}")
+            except Exception as resume_err:
+                logger.error(f"Failed to auto-send resume document: {resume_err}")
 
     # 6. Smart Color Finder shortcut
     hex_match = re.search(r'#([A-Fa-f0-9]{6})\b', text)
@@ -1272,6 +1272,38 @@ async def _send_screenshot_if_present(update: Update, text: str):
                 await update.message.reply_photo(photo=photo_file, caption="📸 Live Application / System Proof")
         except Exception as photo_err:
             logger.error(f"Error sending photo: {photo_err}")
+
+
+def _find_pdf_path(text: str) -> Optional[str]:
+    patterns = [
+        r'(?:Proof Screenshot / PDF|PDF Document|PDF):\s*`?([^\s`\n\r]+\.pdf)`?',
+        r'([A-Za-z]:\\[^\s\n\r]+\.pdf)',
+        r'(storage[\\/]bills[\\/][^\s`\n\r]+\.pdf)',
+        r'([^\s`\n\r]+Bill[^\s`\n\r]*\.pdf)'
+    ]
+    for pat in patterns:
+        m = re.search(pat, text, re.IGNORECASE)
+        if m:
+            candidate = m.group(1).strip().strip('`').strip()
+            if not os.path.isabs(candidate):
+                candidate = os.path.join(os.path.dirname(os.path.dirname(__file__)), candidate)
+            if os.path.exists(candidate):
+                return candidate
+    return None
+
+
+async def _send_pdf_if_present(update: Update, text: str):
+    pdf_p = _find_pdf_path(text)
+    if pdf_p and os.path.exists(pdf_p):
+        try:
+            with open(pdf_p, "rb") as pdf_file:
+                await update.message.reply_document(
+                    document=pdf_file,
+                    filename=os.path.basename(pdf_p),
+                    caption=f"🧾 Official PDF Invoice: {os.path.basename(pdf_p)}"
+                )
+        except Exception as pdf_err:
+            logger.error(f"Error sending PDF: {pdf_err}")
 
 async def _send_reply_safely(update: Update, text: str):
     """Safely sends replies splitting chunks >4000 chars and falling back if Markdown fails."""
@@ -1355,8 +1387,9 @@ async def voice_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
         reply = await query_antigravity(transcribed_text)
         await _send_reply_safely(update, reply)
 
-        # If screenshot was taken, send photo directly to Telegram
+        # If screenshot or PDF was created, send directly to Telegram
         await _send_screenshot_if_present(update, reply)
+        await _send_pdf_if_present(update, reply)
 
         # Generate and send Voice Note back to User
         try:
@@ -1409,8 +1442,9 @@ async def chat_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     # 4. Safely send text reply
     await _send_reply_safely(update, reply)
 
-    # 5. Screenshot finder
+    # 5. Screenshot and PDF Document finder
     await _send_screenshot_if_present(update, reply)
+    await _send_pdf_if_present(update, reply)
 
     # 6. If always voice reply is on and reply is concise
     if ALWAYS_VOICE_REPLY and len(reply) < 300:

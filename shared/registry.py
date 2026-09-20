@@ -47,6 +47,22 @@ class SyncDriveVaultInput(BaseModel):
     target_node: str = Field(default="node_01", description="Target 25GB Drive Mesh node identifier (e.g., node_01 for memory, node_03 for resumes)")
 
 
+class CreateSgcBillInput(BaseModel):
+    customer: str = Field(description="Name of the party/customer (e.g., Bannari Amman Mills, Sri Laxmi Export)")
+    variety: str = Field(default="cone winding", description="Variety or yarn process (e.g., cone winding, bleaching, cheese dyeing)")
+    count: str = Field(default="10s", description="Yarn count (e.g., 10s, 20s, 2/10s, 2/40s)")
+    kattu: float = Field(default=0.0, description="Quantity in Kattu (bundles)")
+    kazhi: float = Field(default=0.0, description="Quantity in Kazhi (hanks)")
+    rate: float = Field(description="Rate per Kattu or unit in INR")
+    po_no: Optional[str] = Field(default="", description="Optional Purchase Order number")
+    party_gst: Optional[str] = Field(default="", description="Optional customer GSTIN number")
+
+
+class ExecutePythonCodeInput(BaseModel):
+    code: str = Field(description="Python code to execute inside the server container sandbox")
+    task_label: Optional[str] = Field(default="cloud_task", description="Label for the execution sandbox")
+
+
 # =====================================================================
 # TOOL METADATA & REGISTRATION CONTAINER
 # =====================================================================
@@ -283,6 +299,31 @@ class ToolRegistry:
             structural_validator=lambda d: (
                 bool(d.get("drive_link") or d.get("file_id")),
                 f"Drive file synced: {d.get('drive_link', 'ID present')}"
+            )
+        )
+
+        self.register(
+            name="create_sgc_bill",
+            description="Create an official Sri Ganapathi Colours (SGC) GST tax invoice, calculate CGST/SGST, generate official A4 PDF, and upload directly to Google Drive Main Bills Vault (11KMBP0HHa2AFl30zjL8-a_-BQk9MgWM9).",
+            route=TaskRoute.SERVER,
+            category="business",
+            input_schema=CreateSgcBillInput,
+            structural_validator=lambda d: (
+                bool(d.get("billNo")) and d.get("netAmount", 0) > 0,
+                f"SGC Bill #{d.get('billNo')} created for ₹{d.get('netAmount')}"
+            ),
+            requires_semantic_verification=True
+        )
+
+        self.register(
+            name="execute_python_code",
+            description="Execute dynamic Python code inside the server container sandbox, perform calculations, data processing, or generate files, and return stdout/stderr.",
+            route=TaskRoute.SERVER,
+            category="engineering",
+            input_schema=ExecutePythonCodeInput,
+            structural_validator=lambda d: (
+                d.get("status") == "success" or bool(d.get("stdout")),
+                f"Code execution status: {d.get('status')}"
             )
         )
 

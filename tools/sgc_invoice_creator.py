@@ -27,7 +27,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 STORAGE_BILLS_DIR = BASE_DIR / "storage" / "bills"
 STORAGE_BILLS_DIR.mkdir(parents=True, exist_ok=True)
 
-SGC_DATA_PATH = Path(os.environ.get("APPDATA", "")) / "sgc-billing" / "sgc-billing-data.json"
+appdata_dir = os.environ.get("APPDATA")
+if appdata_dir:
+    SGC_DATA_PATH = Path(appdata_dir) / "sgc-billing" / "sgc-billing-data.json"
+else:
+    SGC_DATA_PATH = STORAGE_BILLS_DIR / "sgc-billing-data.json"
+
 LOCAL_EXPORT_DIR = Path("E:/GC BILLS")
 if not LOCAL_EXPORT_DIR.exists():
     try:
@@ -347,7 +352,20 @@ def create_sgc_bill(customer, variety, count, kattu, kazhi, rate, po_no="", del_
         except Exception:
             pass
 
-    # 7. Update SGC DB
+    # 7. Upload to Google Drive Master Bills Vault (11KMBP0HHa2AFl30zjL8-a_-BQk9MgWM9)
+    drive_link = None
+    try:
+        from tools.sync_to_drive import get_drive_service, upload_file_to_vault
+        service = get_drive_service()
+        if service:
+            drive_res = upload_file_to_vault(service, str(primary_pdf_path), folder_id="11KMBP0HHa2AFl30zjL8-a_-BQk9MgWM9")
+            if drive_res and "webViewLink" in drive_res:
+                drive_link = drive_res["webViewLink"]
+                bill_record["driveUrl"] = drive_link
+    except Exception as drive_err:
+        print(f"[!] Warning: Could not upload bill to Google Drive: {drive_err}")
+
+    # 8. Update SGC DB
     bill_record["localPath"] = str(primary_pdf_path)
     bills.append(bill_record)
     data["sgc-bills"] = bills
@@ -369,6 +387,7 @@ def create_sgc_bill(customer, variety, count, kattu, kazhi, rate, po_no="", del_
         "sgst": sgst,
         "pdf_path": str(primary_pdf_path),
         "vault_pdf_path": str(vault_pdf_path),
+        "drive_link": drive_link,
         "items": [item_entry]
     }
 
