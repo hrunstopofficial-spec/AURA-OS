@@ -123,5 +123,106 @@
       "post_id": "urn:li:share:7505086389667909633",
       "method": "ugcPosts"
     }
+  },
+  {
+    "timestamp": "2026-09-14T07:44:44.363860",
+    "commit_hash": "2c497b7",
+    "commit_message": "fix(cloud): auto-launch 24/7 Telegram bridge on Render and serve mobile hub UI on root",
+    "post_content": "Building a personal AI system is great\u2014until your local machine sleeps and takes your agent offline. Today, I fixed that for AURA-OS by bringing 24/7 background execution and mobile access directly to the cloud.\n\nHere is what just shipped:\n\n\ud83d\ude80 24/7 Telegram Bridge Auto-Launch: Configured automated background process bootstrapping on Render, ensuring the Telegram agent bridge runs continuously without manual triggers.\n\ud83d\udcf1 Mobile Hub UI Served on Root: Routed the core web interface directly to `/`, giving me instant, mobile-first control over AURA-OS from any browser.\n\u26a1 Resilient Dynamic Router & Memory Sync: Updated the background routing layer and persistent task memory structures to handle long-running background tasks seamlessly.\n\u2699\ufe0f Infrastructure-as-Code Refactor: Streamlined build specs in `render.yaml` and unified environmental configs for seamless cloud deployments.\n\nEngineering Takeaway:\nBuilding practical AI agents is 20% model engineering and 80% robust, zero-downtime infrastructure. If your assistant isn't available instantly from your phone 24/7, it's just a script\u2014not an OS.\n\n\ud83d\udd17 Explore the open-source architecture on GitHub: https://github.com/Mukil630/AURA-OS\n\n#BuildInPublic #Python #AIEngineering #FullStack #OpenSource #CloudNative #DevCommunity",
+    "image_attached": "C:\\Users\\mukil\\jarvis-core\\storage\\reports\\linkedin_banner_2c497b7.jpg",
+    "result": {
+      "success": true,
+      "post_id": "urn:li:share:7505086600071004160",
+      "method": "ugcPosts"
+    }
+  },
+  {
+    "timestamp": "2026-09-14T07:53:36.383423",
+    "commit_hash": "442a018",
+    "commit_message": "feat(cloud): add start_server.sh to run telegram_bridge concurrently with uvicorn in cloud container",
+    "post_content": "Deploying background bot services alongside web APIs inside a single cloud container can get messy fast\u2014unless you orchestrate execution cleanly.\n\nJust shipped a core infrastructure update to AURA-OS to handle concurrent process execution smoothly in cloud environments! \ud83d\ude80\n\nHere\u2019s what was shipped:\n\u26a1 Process Concurrency: Created a lightweight `start_server.sh` entrypoint to execute the `telegram_bridge` worker concurrently with `uvicorn`.\n\u2601\ufe0f Cloud Config: Updated `render.yaml` to leverage the new entrypoint for streamlined single-container cloud deployments.\n\ud83d\udee0\ufe0f Application Bridge: Refactored `app/main.py` to cleanly handle async background signals and web endpoints simultaneously.\n\n\ud83d\udca1 Engineering Takeaway:\nYou don't always need heavy multi-container orchestration for lightweight background tasks. Running an asynchronous bridge alongside an ASGI web server in a single tuned environment keeps infrastructure simple, cost-effective, and easy to maintain.\n\n\ud83d\udd17 Explore the open-source architecture on GitHub: https://github.com/Mukil630/AURA-OS\n\n#BuildInPublic #Python #FastAPI #CloudComputing #AIEngineering #DevOps #OpenSource",
+    "image_attached": "C:\\Users\\mukil\\jarvis-core\\storage\\reports\\linkedin_banner_442a018.jpg",
+    "result": {
+      "success": true,
+      "post_id": "urn:li:share:7505088831423950849",
+      "method": "ugcPosts"
+    }
+  },
+  {
+    "timestamp": "2026-09-14T07:55:51.569785",
+    "commit_hash": "f085c7d",
+    "commit_message": "fix(docker): bind uvicorn to PORT and run telegram_bridge concurrently for Render healthcheck",
+    "post_content": "Ever had a background AI agent deployment fail simply because the cloud platform couldn't ping a healthcheck endpoint? \n\nI just pushed a critical containerization fix to keep AURA-OS fully responsive and continuously deployed on Render.\n\nHere is what just shipped in the latest update:\n\n\u26a1 Dynamic Port Binding: Bound Uvicorn explicitly to Render\u2019s dynamic $PORT environment variable, satisfying strict HTTP healthcheck requirements.\n\ud83d\udd00 Concurrent Process Execution: Orchestrated the `telegram_bridge` to run concurrently alongside the web server inside a single lightweight Docker container.\n\ud83d\udee1\ufe0f Deployment Stability: Eliminated container restart loops, keeping bot listeners active while serving backend API endpoints flawlessly.\n\nEngineering Takeaway:\nWhen deploying hybrid AI systems (background event loops + REST APIs), your Docker setup must respect the deployment platform's healthcheck expectations. Two lines changed in a Dockerfile can be the difference between silent deployment failures and rock-solid uptime.\n\n\ud83d\udd17 Explore the open-source architecture on GitHub: https://github.com/Mukil630/AURA-OS\n\n#BuildInPublic #Docker #Python #AIEngineering #FullStack #OpenSource #DevOps",
+    "image_attached": "C:\\Users\\mukil\\jarvis-core\\storage\\reports\\linkedin_banner_f085c7d.jpg",
+    "result": {
+      "success": true,
+      "post_id": "urn:li:share:7505089398095486976",
+      "method": "ugcPosts"
+    }
+  },
+  {
+    "timestamp": "2026-09-14T08:01:33.648178",
+    "commit_hash": "9087a07",
+    "commit_message": "fix(docker): add beautifulsoup4 requests and dependencies to requirements.txt and Dockerfile",
+    "post_content": "An AI agent is only as powerful as the tools it can execute, and executing web scrapers inside isolated Docker containers requires rock-solid dependency alignment. I just shipped a fresh patch to bring seamless live-data scraping capabilities to AURA-OS!\n\nHere is what just went live:\n\n\ud83d\udc33 Docker Environment Alignment: Updated the Dockerfile and environment stack to ensure web scraping libraries are natively packaged during container initialization.\n\u2699\ufe0f Scraper Skill Enhancement: Refactored skills/spinning_mills/mill_scraper.py with robust requests and beautifulsoup4 integration for real-time data extraction.\n\ud83d\udce6 Dependency Stabilization: Standardized requirements.txt to guarantee deterministic, reproducible builds across development and production environments.\n\nEngineering Insight: When building agentic frameworks, execution reliability hinges on environment parity. If your agent's sandbox drifts from its required dependencies, tools fail silently\u2014containerizing skill prerequisites cleanly from day one solves this completely.\n\n\ud83d\udd17 Explore the open-source architecture on GitHub: https://github.com/Mukil630/AURA-OS\n\n#BuildInPublic #Python #AIEngineering #Docker #FullStack #OpenSource #DevCommunity",
+    "image_attached": "C:\\Users\\mukil\\jarvis-core\\storage\\reports\\linkedin_banner_9087a07.jpg",
+    "result": {
+      "success": true,
+      "post_id": "urn:li:share:7505090831494799360",
+      "method": "ugcPosts"
+    }
+  },
+  {
+    "timestamp": "2026-09-14T08:47:08.629297",
+    "commit_hash": "f98b893",
+    "commit_message": "fix(router): inject live IST time, serialize HttpUrl with mode=json, and resolve discriminated union in TaskRequest",
+    "post_content": "When building an AI Operating System, minor serialization bugs and missing temporal context can completely throw off agent decision-making. Today\u2019s commit to AURA-OS was all about hardening our routing layer and giving system agents precise, real-time awareness.\n\nHere is what just shipped:\n\n\u23f0 Live Temporal Grounding: Injected dynamic IST timestamps into the router, ensuring AI agents evaluate time-sensitive tasks with exact local temporal context.\n\u26a1 Strict Serialization Fixes: Resolved HttpUrl payload parsing bugs across the API boundary by enforcing explicit `mode='json'` Pydantic serialization.\n\ud83e\udde9 Discriminated Union Resolution: Fixed dynamic `TaskRequest` polymorphism handling in shared protocols, guaranteeing seamless payload validation between server agents and system executors.\n\u2699\ufe0f Hardened Task Dispatcher: Updated hybrid dispatch logic and safe action runners to reliably handle complex workflows like automated form filling.\n\nEngineering Insight: Building production-ready autonomous agents isn't just about LLM prompts\u2014it's about building deterministic schemas, clean protocols, and resilient backend systems that fail gracefully.\n\n\ud83d\udd17 Explore the open-source architecture on GitHub: https://github.com/Mukil630/AURA-OS\n\n#BuildInPublic #AIEngineering #Python #FastAPI #SystemArchitecture #OpenSource #DevCommunity",
+    "image_attached": "C:\\Users\\mukil\\jarvis-core\\storage\\reports\\linkedin_banner_f98b893.jpg",
+    "result": {
+      "success": true,
+      "post_id": "urn:li:share:7505102303247405056",
+      "method": "ugcPosts"
+    }
+  },
+  {
+    "timestamp": "2026-09-14T08:49:54.614759",
+    "commit_hash": "cfcd435",
+    "commit_message": "fix(tools): ensure BASE_DIR in sys.path for test_roboform_autofill",
+    "post_content": "Nothing ruins a developer's flow state like a random `ModuleNotFoundError` right when an automated suite is supposed to execute. Just pushed a targeted update to AURA-OS to lock in flawless execution context for our tool test environment.\n\nHere is what was shipped in the latest commit:\n\n\u2022 \ud83d\udee0\ufe0f **Explicit Path Resolution**: Dynamically ensured `BASE_DIR` is present in `sys.path` inside `test_roboform_autofill.py`.\n\u2022 \ud83e\uddea **Hermetic Test Execution**: Eliminated pathing ambiguity so standalone tool tests execute reliably regardless of the working directory.\n\u2022 \u26a1 **Zero-Friction DX**: Standardized import handling across automated form-fill utility scripts to keep local runs and CI pipelines green.\n\nEngineering Takeaway:\nTest harnesses need to be context-aware by design. Taking two minutes to explicitly handle root paths keeps your test suite deterministic and saves hours of environment debugging later.\n\n\ud83d\udd17 Explore the open-source architecture on GitHub: https://github.com/Mukil630/AURA-OS\n\n#BuildInPublic #Python #AIEngineering #FullStack #OpenSource #DevCommunity #SoftwareEngineering",
+    "image_attached": "C:\\Users\\mukil\\jarvis-core\\storage\\reports\\linkedin_banner_cfcd435.jpg",
+    "result": {
+      "success": true,
+      "post_id": "urn:li:share:7505103000344993793",
+      "method": "ugcPosts"
+    }
+  },
+  {
+    "timestamp": "2026-09-15T14:32:10.557733",
+    "commit_hash": "398d8be",
+    "commit_message": "fix(security): sanitize hardcoded secrets and enforce strict telegram user authorization whitelist",
+    "post_content": "\ud83d\ude80 Just locked down a critical security gap in AURA\u2011OS \u2013 no more hard\u2011coded secrets and only vetted Telegram users can now interact with the bridge!  \n\n**What shipped:**  \n- \ud83d\udd10 **Sanitized secrets** \u2013 moved all API keys & tokens out of source code into environment\u2011driven configs (`config.py`).  \n- \ud83d\udccb **Whitelist enforcement** \u2013 added a strict Telegram user ID allow\u2011list in `telegram_bridge.py` to prevent unauthorized commands.  \n- \ud83d\udee0\ufe0f **Refactored auth flow** \u2013 centralized validation logic, reducing duplicated checks by 70% and simplifying future policy updates.  \n- \ud83d\udcc8 **Zero\u2011downtime rollout** \u2013 leveraged hot\u2011swap config loading so the service stays online while the new security layer boots.  \n\n**Takeaway:** Treat secrets like code\u2014if they\u2019re in the repo, they\u2019re exposed. Centralizing auth not only hardens the surface but also makes the system far easier to audit and extend.  \n\n\ud83d\udd17 Explore the open\u2011source architecture on GitHub: https://github.com/Mukil630/AURA-OS  \n\n#BuildInPublic #Python #AIEngineering #FullStack #OpenSource #DevCommunity #SecurityFirst",
+    "image_attached": "C:\\Users\\mukil\\jarvis-core\\storage\\reports\\linkedin_banner_398d8be.jpg",
+    "result": {
+      "success": true,
+      "post_id": "urn:li:share:7505551521653370880",
+      "method": "ugcPosts"
+    }
+  },
+  {
+    "timestamp": "2026-09-20T06:56:51.284691",
+    "post_content": "\ud83d\ude80 Shipped SGC Billing v6.0: Autonomous Enterprise Billing, Month-Wise Drive Vaults & Mobile Telegram AI Gateway for a Real-World Textile Dyeing Unit! \ud83e\uddf5\u26a1\n\nMost MSMEs and textile dyeing factories in India still run on:\n\u274c Fragile manual paper bill books & scattered PDFs\n\u274c Chaotic month-end scrambling to compute CGST (2.5%) & SGST (2.5%) for GSTR-3B filing\n\u274c Being tied to a desktop PC just to create delivery invoices & track payments\n\nTo solve this end-to-end for Sri Ganapathi Colours (SGC), I designed and built an offline-resilient Desktop Suite + Mobile Telegram AI Control Plane.\n\nHere is what just went live in v6.0:\n\n1\ufe0f\u20e3 \ud83d\udcc1 Autonomous Month-Wise Google Drive Vault Mesh:\n\u2022 Invoices are automatically categorized and routed into chronological month subfolders (e.g., `2026-05 (May 2026)`, `2026-07 (July 2026)`, `2026-09 (September 2026)`).\n\u2022 100% zero manual file organizing, backed up across 3 distributed vault mirrors.\n\n2\ufe0f\u20e3 \ud83c\udfdb\ufe0f Monthly GST Tax Radar & Bill-by-Bill Breakdown:\n\u2022 Auto-aggregates CGST (2.50%), SGST (2.50%), and Total GST (5.00%) across all invoices for the month.\n\u2022 Dedicated interactive table showing each bill's individual GST amounts with single-click GSTR-1 CSV export and instant WhatsApp dispatch for the CA / Tax Auditor.\n\n3\ufe0f\u20e3 \ud83d\udcf1 Interactive Telegram AI Mobile Control Plane (@mukil_jarvis_executive_bot):\n\u2022 `/gst` \u2014 Interactive GST Control Center with Inline Buttons to toggle months, download GSTR-1 spreadsheets directly into chat, and forward tax data to CA.\n\u2022 `/bill` \u2014 Generate official GST invoices with CSB Bank details & Dynamic UPI QR codes (GPay/PhonePe) directly from mobile while on the factory floor.\n\u2022 `/overdue` \u2014 Real-time customer balance radar with automated Tamil & English payment reminder templates.\n\n4\ufe0f\u20e3 \ud83c\udfed Industrial Dyeing Precision:\n\u2022 Tailored for yarn count volume tracking (10s, 2/30s, 2/40s), kattu/kazhi calculations, and integrated with Kubelka-Munk trichromatic dye recipe formulations (Yellow HE4R, Red HE7B, Blue HERD).\n\n\ud83d\udee0\ufe0f Tech Stack:\n\u2022 Desktop App: Electron.js, React, Node.js\n\u2022 Cloud & Storage: Google Drive API v3 (Distributed Multi-Vault Mesh)\n\u2022 Mobile Gateway: python-telegram-bot (Interactive Inline Keyboards & Document Dispatch)\n\u2022 PDF Engine: Chromium Native Print & Puppeteer with Dynamic UPI QR\n\nSoftware engineering is 10x more rewarding when it directly solves tangible problems on the factory floor and automates tedious accounting workflows! \ud83d\udca1\n\n\ud83d\udd17 Explore the open-source code on GitHub: https://github.com/Mukil630/sgc-billing\n\n#FullStackDevelopment #ElectronJS #Python #TelegramBot #Automation #GST #TextileEngineering #SoftwareEngineering #AI #Productivity #BuildInPublic",
+    "image_attached": "C:\\Users\\mukil\\.gemini\\antigravity-cli\\brain\\c4314e11-bbb8-4d64-bf89-1849d00acf1a\\sgc_billing_showcase_1789867470173.jpg",
+    "result": {
+      "success": true,
+      "post_id": "urn:li:share:7507248874428710912",
+      "method": "ugcPosts"
+    }
+  },
+  {
+    "timestamp": "2026-09-20T07:42:43.566076",
+    "post_content": "\u26a1 How I Automated End-to-End Invoicing, Month-Wise Cloud Archiving & GST Tax Filing for an Industrial Textile Dyeing Factory! \ud83e\uddf5\ud83d\udcca\n\nIn traditional MSMEs and textile dyeing units across India, accounting and tax filing are often broken down into painful manual steps:\n\u274c Creating paper bills or unorganized local files\n\u274c Manually sorting invoices into monthly folders for audits\n\u274c Frantic month-end manual calculation of CGST (2.5%) and SGST (2.5%) for GSTR-3B filings\n\u274c Zero mobile accessibility when on the factory floor\n\nTo solve this, I designed and deployed an autonomous 4-stage pipeline for Sri Ganapathi Colours (SGC) with our v6.0 release:\n\nHere is how the automated flow works (illustrated in the infographic below):\n\n1\ufe0f\u20e3 \ud83d\udcdd Invoice Creation & Dynamic Tax Engine:\n\u2022 Floor managers enter yarn variety (10s, 2/30s, 2/40s) and weight (kattu/kazhi).\n\u2022 The engine automatically computes Subtotal, CGST (2.50%), and SGST (2.50%) in real-time, eliminating human math errors.\n\n2\ufe0f\u20e3 \u2601\ufe0f Autonomous Cloud Sorting (Google Drive API):\n\u2022 As soon as an invoice is saved, our background sync engine determines the billing period.\n\u2022 The system dynamically queries our Google Drive Master Vault (Node 05) and routes the PDF into chronological month subfolders (`2026-05`, `2026-07`, `2026-08`, `2026-09`) with zero local disk waste.\n\n3\ufe0f\u20e3 \ud83d\udcca Monthly GST Tax Radar & GSTR-1 Generator:\n\u2022 A dedicated tax totalizer aggregates all CGST & SGST across every bill for any selected month.\n\u2022 Provides single-click GSTR-1 CSV export and instant formatted summaries ready for the auditor.\n\n4\ufe0f\u20e3 \ud83d\udcf1 Mobile Executive Access via Telegram Bot (@mukil_jarvis_executive_bot):\n\u2022 `/gst` \u2014 Instant mobile tax dashboard with inline buttons to switch months and download GSTR-1 CSV spreadsheets directly into chat.\n\u2022 1-Click WhatsApp forward link to send pre-formatted Tamil/English tax summaries directly to the Chartered Accountant (CA).\n\n\ud83d\udee0\ufe0f Tech Stack & Architecture:\n\u2022 Desktop App: Electron.js, React, Tailwind CSS, Node.js\n\u2022 Cloud Storage Mesh: Google Drive REST API v3 (Distributed Multi-Vault Architecture)\n\u2022 Mobile Gateway: python-telegram-bot (Interactive Callbacks & Document Dispatch)\n\u2022 Industrial Math: Kubelka-Munk Trichromatic Reactive Dye Formulation (Yellow, Red, Blue)\n\nWhen software engineering directly automates heavy manual operations on the factory floor, the impact is immediate and tangible! \ud83d\udca1\n\n\ud83d\udd17 Open-Source Repository: https://github.com/Mukil630/sgc-billing\n\n#FullStackDevelopment #Automation #ElectronJS #Python #TelegramBot #GST #Fintech #TextileEngineering #SoftwareArchitecture #BuildInPublic",
+    "post_id": "urn:li:share:7507260417635852288",
+    "media": "C:\\Users\\mukil\\.gemini\\antigravity-cli\\brain\\c4314e11-bbb8-4d64-bf89-1849d00acf1a\\sgc_automation_flow_1789868868962.jpg",
+    "status": "PUBLISHED"
   }
 ]

@@ -1,6 +1,6 @@
 {
-  "timestamp": "2026-09-13T16:05:32.703621",
-  "total_jobs": 57,
+  "timestamp": "2026-09-15T08:52:56.514433",
+  "total_jobs": 58,
   "jobs": [
     {
       "company": "Canonical",
@@ -97,6 +97,14 @@
       "portal": "Greenhouse",
       "ats_score": "88%",
       "url": "https://careers.datadoghq.com/detail/8139662/?gh_jid=8139662"
+    },
+    {
+      "company": "Datadog",
+      "title": "Developer Advocate - Service Management EMEA",
+      "location": "France, Remote",
+      "portal": "Greenhouse",
+      "ats_score": "88%",
+      "url": "https://careers.datadoghq.com/detail/8161455/?gh_jid=8161455"
     },
     {
       "company": "Mongodb",
@@ -341,14 +349,6 @@
     {
       "company": "Affirm",
       "title": "Software Engineer II, Back-end (Card Mgmt & Transaction Processing)",
-      "location": "Remote US",
-      "portal": "Greenhouse",
-      "ats_score": "88%",
-      "url": "https://job-boards.greenhouse.io/affirm/jobs/7766277003"
-    },
-    {
-      "company": "Affirm",
-      "title": "Software Engineer II, Back-end (Card Mgmt & Transaction Processing)",
       "location": "Remote Canada",
       "portal": "Greenhouse",
       "ats_score": "88%",
@@ -356,11 +356,11 @@
     },
     {
       "company": "Affirm",
-      "title": "Software Engineer II, Backend (Collections)",
-      "location": "Remote Spain",
+      "title": "Software Engineer II, Back-end (Card Mgmt & Transaction Processing)",
+      "location": "Remote US",
       "portal": "Greenhouse",
       "ats_score": "88%",
-      "url": "https://job-boards.greenhouse.io/affirm/jobs/7813157003"
+      "url": "https://job-boards.greenhouse.io/affirm/jobs/7766277003"
     },
     {
       "company": "Affirm",
@@ -369,6 +369,14 @@
       "portal": "Greenhouse",
       "ats_score": "88%",
       "url": "https://job-boards.greenhouse.io/affirm/jobs/7813159003"
+    },
+    {
+      "company": "Affirm",
+      "title": "Software Engineer II, Backend (Collections)",
+      "location": "Remote Spain",
+      "portal": "Greenhouse",
+      "ats_score": "88%",
+      "url": "https://job-boards.greenhouse.io/affirm/jobs/7813157003"
     },
     {
       "company": "Affirm",

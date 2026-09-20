@@ -17,9 +17,9 @@ from tools.tts_generator import generate_voice_audio
 from app.tools.reminder_scheduler import ReminderScheduler
 from groq import Groq
 
-from telegram import Update
+from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.request import HTTPXRequest
-from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, filters, ContextTypes
+from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, CallbackQueryHandler, filters, ContextTypes
 
 logging.basicConfig(format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -393,6 +393,235 @@ async def sgc_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "• *Features*: Automated Electron invoices, PDF generation, Drive sync & Overdue Radar."
     )
     await update.message.reply_text(msg, parse_mode="Markdown", disable_web_page_preview=True)
+
+def get_gst_summary_data(target_month_str: str = None):
+    """Helper to load and calculate GST for a given month (YYYY-MM)."""
+    import json
+    data_path = os.path.join(os.environ.get("APPDATA", ""), "sgc-billing", "sgc-billing-data.json")
+    if not os.path.exists(data_path):
+        return None, f"SGC Billing database not found at `{data_path}`"
+
+    try:
+        with open(data_path, "r", encoding="utf-8") as f:
+            data = json.load(f)
+    except Exception as e:
+        return None, f"Failed to read database: {str(e)}"
+
+    bills = data.get("sgc-bills", [])
+
+    now = datetime.now()
+    first_day_current = now.replace(day=1)
+    last_month_end = first_day_current - timedelta(days=1)
+    prev_month_str = last_month_end.strftime("%Y-%m")
+    prev_month_name = last_month_end.strftime("%B %Y")
+    curr_month_str = now.strftime("%Y-%m")
+    curr_month_name = now.strftime("%B %Y")
+
+    if not target_month_str or target_month_str in ["prev", "previous", "last", "lastmonth"]:
+        m_str = prev_month_str
+        m_name = prev_month_name
+        is_prev = True
+    elif target_month_str in ["curr", "current", "this", "now", "thismonth"]:
+        m_str = curr_month_str
+        m_name = curr_month_name
+        is_prev = False
+    else:
+        m_str = target_month_str
+        try:
+            dt = datetime.strptime(m_str + "-01", "%Y-%m-%d")
+            m_name = dt.strftime("%B %Y")
+        except Exception:
+            m_name = m_str
+        is_prev = (m_str == prev_month_str)
+
+    target_bills = [b for b in bills if (b.get("date") or "").startswith(m_str)]
+    total_subtotal = sum(float(b.get("subtotal") or 0) for b in target_bills)
+    total_cgst = sum(float(b.get("cgst") or 0) for b in target_bills)
+    total_sgst = sum(float(b.get("sgst") or 0) for b in target_bills)
+    total_gst = total_cgst + total_sgst
+    total_gross = sum(float(b.get("netAmount") or 0) for b in target_bills)
+
+    return {
+        "month_str": m_str,
+        "month_name": m_name,
+        "is_prev": is_prev,
+        "bills": target_bills,
+        "total_subtotal": total_subtotal,
+        "total_cgst": total_cgst,
+        "total_sgst": total_sgst,
+        "total_gst": total_gst,
+        "total_gross": total_gross,
+        "prev_month_str": prev_month_str,
+        "curr_month_str": curr_month_str,
+    }, None
+
+def build_gst_keyboard(month_str: str):
+    """Builds interactive inline buttons for Telegram."""
+    buttons = [
+        [
+            InlineKeyboardButton("📅 Last Month", callback_data="gst_month:prev"),
+            InlineKeyboardButton("📅 This Month", callback_data="gst_month:curr"),
+        ],
+        [
+            InlineKeyboardButton("📄 Send GSTR-1 CSV", callback_data=f"gst_csv:{month_str}"),
+            InlineKeyboardButton("💬 Auditor Copy", callback_data=f"gst_ca:{month_str}"),
+        ],
+        [
+            InlineKeyboardButton("☁️ Master Drive Vault ↗", url="https://drive.google.com/drive/folders/11KMBP0HHa2AFl30zjL8-a_-BQk9MgWM9?usp=drive_link"),
+            InlineKeyboardButton("🔄 Refresh", callback_data=f"gst_month:{month_str}"),
+        ]
+    ]
+    return InlineKeyboardMarkup(buttons)
+
+async def gst_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Interactive GST Control Center on Telegram."""
+    args = context.args
+    target_arg = args[0].strip().lower() if args else "prev"
+
+    data, err = get_gst_summary_data(target_arg)
+    if err:
+        await update.message.reply_text(f"❌ {err}", parse_mode="Markdown")
+        return
+
+    bill_lines = []
+    for b in data["bills"]:
+        b_no = b.get("billNo", "?")
+        cust = (b.get("customer") or "Unknown")[:22]
+        cg = float(b.get("cgst") or 0)
+        sg = float(b.get("sgst") or 0)
+        tg = cg + sg
+        bill_lines.append(f"• *Bill #{b_no}* ({cust}): `₹{tg:,.2f}` _(CGST ₹{cg:,.2f} + SGST ₹{sg:,.2f})_")
+
+    bills_list_str = "\n".join(bill_lines) if bill_lines else "_No bills found for this month._"
+
+    msg = (
+        f"🏛️ *SRI GANAPATHI COLOURS — GST CONTROL CENTER*\n"
+        f"📅 *Period: {data['month_name']}* {'(Previous Month Filing)' if data['is_prev'] else '(Current Month)'}\n"
+        f"────────────────────────\n"
+        f"🧾 *ALL BILLS GST AMOUNTS ({len(data['bills'])} Bills)*:\n"
+        f"{bills_list_str}\n"
+        f"────────────────────────\n"
+        f"🔹 *Total CGST (2.50%)*: `₹{data['total_cgst']:,.2f}`\n"
+        f"🔹 *Total SGST (2.50%)*: `₹{data['total_sgst']:,.2f}`\n"
+        f"🧾 *TOTAL MONTH GST (5.00%)*: `₹{data['total_gst']:,.2f}`\n"
+        f"────────────────────────\n"
+        f"💵 *Taxable Turnover*: `₹{data['total_subtotal']:,.2f}`\n"
+        f"💰 *Gross Invoiced*: `₹{data['total_gross']:,.2f}`\n\n"
+        f"👇 *Tap buttons below to switch months or export CSV:*"
+    )
+    keyboard = build_gst_keyboard(data["month_str"])
+    await update.message.reply_text(msg, parse_mode="Markdown", reply_markup=keyboard)
+
+async def gst_callback_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Handles inline button clicks for GST control."""
+    query = update.callback_query
+    await query.answer()
+
+    data_str = query.data
+    if not data_str:
+        return
+
+    if data_str.startswith("gst_month:"):
+        month_param = data_str.split(":", 1)[1]
+        data, err = get_gst_summary_data(month_param)
+        if err:
+            await query.edit_message_text(f"❌ {err}", parse_mode="Markdown")
+            return
+
+        bill_lines = []
+        for b in data["bills"]:
+            b_no = b.get("billNo", "?")
+            cust = (b.get("customer") or "Unknown")[:22]
+            cg = float(b.get("cgst") or 0)
+            sg = float(b.get("sgst") or 0)
+            tg = cg + sg
+            bill_lines.append(f"• *Bill #{b_no}* ({cust}): `₹{tg:,.2f}` _(CGST ₹{cg:,.2f} + SGST ₹{sg:,.2f})_")
+
+        bills_list_str = "\n".join(bill_lines) if bill_lines else "_No bills found for this month._"
+
+        msg = (
+            f"🏛️ *SRI GANAPATHI COLOURS — GST CONTROL CENTER*\n"
+            f"📅 *Period: {data['month_name']}* {'(Previous Month Filing)' if data['is_prev'] else '(Current Month)'}\n"
+            f"────────────────────────\n"
+            f"🧾 *ALL BILLS GST AMOUNTS ({len(data['bills'])} Bills)*:\n"
+            f"{bills_list_str}\n"
+            f"────────────────────────\n"
+            f"🔹 *Total CGST (2.50%)*: `₹{data['total_cgst']:,.2f}`\n"
+            f"🔹 *Total SGST (2.50%)*: `₹{data['total_sgst']:,.2f}`\n"
+            f"🧾 *TOTAL MONTH GST (5.00%)*: `₹{data['total_gst']:,.2f}`\n"
+            f"────────────────────────\n"
+            f"💵 *Taxable Turnover*: `₹{data['total_subtotal']:,.2f}`\n"
+            f"💰 *Gross Invoiced*: `₹{data['total_gross']:,.2f}`\n\n"
+            f"👇 *Tap buttons below to switch months or export CSV:*"
+        )
+        keyboard = build_gst_keyboard(data["month_str"])
+        await query.edit_message_text(msg, parse_mode="Markdown", reply_markup=keyboard)
+
+    elif data_str.startswith("gst_csv:"):
+        month_param = data_str.split(":", 1)[1]
+        data, err = get_gst_summary_data(month_param)
+        if err or not data["bills"]:
+            await query.message.reply_text(f"❌ No bills found to export for `{month_param}`.", parse_mode="Markdown")
+            return
+
+        import csv
+        import io
+        output = io.StringIO()
+        writer = csv.writer(output)
+        writer.writerow([
+            "Bill No", "Date", "Customer Name", "Customer GSTIN", "Taxable Subtotal",
+            "CGST (2.5%)", "SGST (2.5%)", "Total GST (5%)", "Net Amount"
+        ])
+        for b in data["bills"]:
+            cg = float(b.get("cgst") or 0)
+            sg = float(b.get("sgst") or 0)
+            writer.writerow([
+                b.get("billNo"), b.get("date"), b.get("customer"), b.get("partyGst", ""),
+                f"{float(b.get('subtotal') or 0):.2f}", f"{cg:.2f}", f"{sg:.2f}", f"{(cg+sg):.2f}",
+                f"{float(b.get('netAmount') or 0):.2f}"
+            ])
+        writer.writerow([])
+        writer.writerow([
+            "TOTAL", "", "", "", f"{data['total_subtotal']:.2f}",
+            f"{data['total_cgst']:.2f}", f"{data['total_sgst']:.2f}", f"{data['total_gst']:.2f}",
+            f"{data['total_gross']:.2f}"
+        ])
+
+        csv_bytes = output.getvalue().encode("utf-8")
+        filename = f"SGC_GST_Report_{data['month_str']}.csv"
+        await query.message.reply_document(
+            document=csv_bytes,
+            filename=filename,
+            caption=f"📊 *SGC GST Report for {data['month_name']}*\n🧾 Total GST: `₹{data['total_gst']:,.2f}`",
+            parse_mode="Markdown"
+        )
+
+    elif data_str.startswith("gst_ca:"):
+        month_param = data_str.split(":", 1)[1]
+        data, err = get_gst_summary_data(month_param)
+        if err:
+            return
+
+        ca_msg = (
+            f"Vanakkam Sir,\n"
+            f"*SRI GANAPATHI COLOURS* — GST Tax Summary for Filing:\n"
+            f"────────────────────────\n"
+            f"📅 Period: {data['month_name']}\n"
+            f"🧾 Total Invoices: {len(data['bills'])} Bills\n"
+            f"💵 Taxable Subtotal: ₹{data['total_subtotal']:,.2f}\n\n"
+            f"🔹 CGST (2.50%): ₹{data['total_cgst']:,.2f}\n"
+            f"🔹 SGST (2.50%): ₹{data['total_sgst']:,.2f}\n"
+            f"────────────────────────\n"
+            f"🧾 TOTAL GST PAYABLE (5%): ₹{data['total_gst']:,.2f}\n"
+            f"💰 Gross Invoiced: ₹{data['total_gross']:,.2f}\n"
+            f"────────────────────────\n"
+            f"GSTIN: 33HKSPS1735K1ZH\n"
+            f"Kindly file GSTR-3B."
+        )
+        import urllib.parse
+        wa_url = f"https://wa.me/?text={urllib.parse.quote(ca_msg)}"
+        kb = InlineKeyboardMarkup([[InlineKeyboardButton("💬 Forward to CA on WhatsApp ↗", url=wa_url)]])
+        await query.message.reply_text(ca_msg, reply_markup=kb)
 
 async def fund_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Banana Fund My Crazy 2.0 status & details."""
@@ -1283,9 +1512,12 @@ def build_app():
     add_cmd("swatch", color_cmd)
     add_cmd("tenses", tenses_cmd)
     add_cmd("sgc", sgc_cmd)
+    add_cmd("gst", gst_cmd)
+    add_cmd("gstr", gst_cmd)
     add_cmd("fundmycrazy", fund_cmd)
     add_cmd("menu", menu_cmd)
     add_cmd("help", menu_cmd)
+    app.add_handler(CallbackQueryHandler(gst_callback_handler, pattern="^gst_"))
     app.add_handler(MessageHandler(filters.PHOTO | filters.Document.IMAGE, photo_handler))
     app.add_handler(MessageHandler(filters.VOICE | filters.AUDIO, voice_handler))
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, chat_handler))
