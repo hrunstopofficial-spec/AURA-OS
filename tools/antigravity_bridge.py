@@ -13,33 +13,89 @@ from memory.memory_manager import MemoryManager
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("antigravity_bridge")
 
-AGY_BINARY_PATH = r"C:\Users\mukil\AppData\Local\agy\bin\agy.exe"
-REPORTS_DIR = os.path.join(os.path.dirname(os.path.dirname(__file__)), "storage", "reports")
+import shutil
+
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+REPORTS_DIR = os.path.join(BASE_DIR, "storage", "reports")
 os.makedirs(REPORTS_DIR, exist_ok=True)
 
 mem = MemoryManager()
 
 
-def run_antigravity_task(task_prompt: str, cwd: str = r"C:\Users\mukil") -> dict:
+def get_antigravity_binary() -> Optional[str]:
+    """Dynamically discovers Antigravity CLI binary across Windows, Linux, Docker."""
+    which_bin = shutil.which("agy") or shutil.which("agy.exe")
+    if which_bin and os.path.exists(which_bin):
+        return which_bin
+    candidates = [
+        r"C:\Users\mukil\AppData\Local\agy\bin\agy.exe",
+        "/root/.local/bin/agy",
+        "/usr/local/bin/agy",
+        os.path.expanduser("~/.local/bin/agy")
+    ]
+    for c in candidates:
+        if os.path.exists(c):
+            return c
+    return None
+
+
+def run_antigravity_task(task_prompt: str, cwd: Optional[str] = None) -> dict:
     """
-    Executes an autonomous software engineering or multi-file task using
-    Google Antigravity CLI in headless mode, writes a local report,
-    and automatically syncs the output report to the 5TB Google Drive Master Vault.
+    Executes an autonomous software engineering task using:
+    1) Native Antigravity CLI (if binary present on PC or Docker), OR
+    2) Antigravity Cloud Twin Brain (Gemini 3.8 Flash SDK) on Render cloud.
     """
+    if not cwd or not os.path.exists(cwd):
+        cwd = BASE_DIR if os.path.exists(BASE_DIR) else os.getcwd()
+
     start_time = time.time()
     timestamp_str = datetime.now().strftime("%Y%m%d_%H%M%S")
     report_filename = f"aura_task_report_{timestamp_str}.txt"
     report_path = os.path.join(REPORTS_DIR, report_filename)
 
-    logger.info(f"🚀 Spawning Headless Antigravity Task: {task_prompt[:100]}...")
+    logger.info(f"🚀 Spawning Autonomous Antigravity Task: {task_prompt[:100]}...")
 
-    if not os.path.exists(AGY_BINARY_PATH):
-        err_msg = f"Antigravity binary not found at: {AGY_BINARY_PATH}"
-        logger.error(err_msg)
-        return {"success": False, "error": err_msg}
+    agy_binary = get_antigravity_binary()
+
+    # Fallback to Cloud Twin if CLI binary is not present (e.g. Render Python runtime)
+    if not agy_binary:
+        logger.info("ℹ️ Antigravity CLI binary not on host. Executing via Antigravity Cloud Twin Brain...")
+        try:
+            from cloud.cloud_twin_agent import CloudTwinAgent
+            twin = CloudTwinAgent()
+            twin_reply = twin.chat(task_prompt)
+            elapsed = round(time.time() - start_time, 2)
+            
+            report_content = (
+                f"==========================================================\n"
+                f"⚡ AURA-OS ANTIGRAVITY CLOUD TWIN EXECUTION REPORT\n"
+                f"Timestamp: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n"
+                f"Task Prompt: {task_prompt}\n"
+                f"Engine: Google Gemini 3.8 Flash Cloud Twin\n"
+                f"Execution Time: {elapsed} seconds\n"
+                f"==========================================================\n\n"
+                f"--- OUTPUT ---\n"
+                f"{twin_reply}\n\n"
+            )
+            with open(report_path, "w", encoding="utf-8") as f:
+                f.write(report_content)
+
+            mem.log_task("ANTIGRAVITY_CLOUD_TWIN", f"Cloud Twin completed task in {elapsed}s")
+            return {
+                "success": True,
+                "elapsed_seconds": elapsed,
+                "report_path": report_path,
+                "report_filename": report_filename,
+                "drive_link": None,
+                "output_preview": twin_reply[:800],
+                "error": None
+            }
+        except Exception as ce:
+            logger.error(f"Cloud Twin fallback failed: {ce}")
+            return {"success": False, "error": f"Antigravity CLI not installed and Cloud Twin error: {ce}"}
 
     cmd = [
-        AGY_BINARY_PATH,
+        agy_binary,
         "--prompt",
         task_prompt,
         "--dangerously-skip-permissions"

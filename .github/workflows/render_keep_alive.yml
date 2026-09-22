@@ -1,0 +1,17 @@
+name: 24/7 Render Keep-Alive Pinger
+
+on:
+  schedule:
+    # Runs every 10 minutes around the clock (24/7 cloud ping)
+    - cron: '*/10 * * * *'
+  workflow_dispatch: # Allows manual trigger from GitHub UI anytime
+
+jobs:
+  keep_alive:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping AURA-OS Render Cloud Health Endpoint
+        run: |
+          echo "Pinging https://aura-os-n6n3.onrender.com/health..."
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" -m 30 "https://aura-os-n6n3.onrender.com/health" || true)
+          echo "Render response status: $STATUS"

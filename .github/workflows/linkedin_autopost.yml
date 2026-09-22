@@ -1,14 +1,12 @@
-name: LinkedIn Auto-Post on Git Push
+name: LinkedIn Manual-Post (Approval Gated)
 
 on:
-  push:
-    branches:
-      - main
-      - master
+  workflow_dispatch: # Only manual trigger from GitHub Actions tab when Mukil explicitly requests it
 
 jobs:
   linkedin_autopost:
     runs-on: ubuntu-latest
+    if: false # Strictly disabled until explicit user instruction
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
