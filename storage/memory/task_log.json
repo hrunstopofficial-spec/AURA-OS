@@ -1,5 +1,27 @@
 [
   {
+    "timestamp": "2026-09-23T21:35:00+05:30",
+    "event": "RENDER_CLOUD_MIGRATION_INITIATED",
+    "description": "Initiated migration of AURA-OS Antigravity Cloud Twin & 24/7 Telegram Server from Mukil's primary Render account (free tier limit reached) to new GitHub account 'hrunstopofficial-spec' and fresh Render deployment. Preparing repository push and environment secrets configuration.",
+    "metadata": {
+      "target_github": "https://github.com/hrunstopofficial-spec",
+      "target_repo_name": "AURA-OS",
+      "status": "AUTHENTICATION_AND_REPO_PREPARATION"
+    }
+  },
+  {
+    "timestamp": "2026-09-23T06:36:00+05:30",
+    "event": "PLACEMENT_EXAM_SAFE_SHIELD_ACTIVATED",
+    "description": "Completely stopped and eradicated all unauthorized automatic background triggers, daemons, and scheduled tasks that cause test logouts during placement exam proctoring verification. 1) Stopped Antigravity remote-control daemon and removed 'AntigravityCliDaemon' (agy.exe remote-control serve) from HKCU Run Registry. 2) Disabled all 7 automatic background scheduled tasks: JARVIS_Daily_Fresher_Jobs_9AM, AuraInteractiveTask, AuraLaunch, AuraType, OpenClaw Gateway, TestInteractive, and Zora Daily Git Updater. 3) Moved auto-startup scripts (JARVIS_OS_Companion.vbs & launch_jarvis_bridge.vbs) from Windows Startup to 'jarvis-core/startup_scripts_manual/' preventing automatic background python/screen hooks. 4) Killed rogue background python/pythonw worker processes (PIDs 11696, 15356). 5) Created 1-click verification & shield script on Desktop: 'ACTIVATE_EXAM_SAFE_SHIELD.bat'. System verified 100% clean and compliant with proctoring browser verification rules.",
+    "metadata": {
+      "agy_daemon": "UNREGISTERED_AND_REMOVED",
+      "scheduled_tasks_disabled": 7,
+      "startup_vbs_disabled": 2,
+      "desktop_shield_script": "C:\\Users\\mukil\\Desktop\\ACTIVATE_EXAM_SAFE_SHIELD.bat",
+      "status": "100%_EXAM_SAFE_VERIFIED"
+    }
+  },
+  {
     "timestamp": "2026-09-20T14:10:00+05:30",
     "event": "DUAL_BRAIN_HYBRID_ARCHITECTURE_DEPLOYED",
     "description": "Engineered and verified AURA-OS Dual-Brain Hybrid Architecture resolving the cloud Antigravity limitation. 1) Built 'jarvis-core/cloud/cloud_twin_agent.py' powered by Google Gemini 3.6 Flash (google.genai SDK) with direct 250GB Drive Mesh access (10 nodes) and executive Tanglish persona for 24/7 autonomous cloud operations when PC is offline. 2) Built 'jarvis-core/tools/pc_relay_daemon.py' with auto-reconnecting WebSocket tunnel to Render Cloud Bridge ('wss://aura-os-n6n3.onrender.com/api/v1/bridge/ws') capable of executing Antigravity CLI ('agy.exe --prompt'), FastOSController vision, and local PowerShell. 3) Created desktop launcher 'Launch_AURA_Relay_Daemon.bat'. 4) Integrated Cloud Twin into 'server_agent/router.py' with HTTP 200 verification.",

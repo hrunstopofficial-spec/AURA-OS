@@ -2,20 +2,37 @@
   "system_name": "MUKIL MASTER AGENT - Autonomous Agent Operating Plane",
   "user": "Mukil",
   "last_updated": "2026-09-22T21:18:00+05:30",
+  "placement_exam_safe_mode": {
+    "status": "ACTIVE_ENFORCED",
+    "reason": "Mukil placement exams & proctoring system verification protection",
+    "background_daemons_stopped": true,
+    "registry_antigravity_daemon_removed": true,
+    "scheduled_tasks_disabled": [
+      "JARVIS_Daily_Fresher_Jobs_9AM",
+      "AuraInteractiveTask",
+      "AuraLaunch",
+      "AuraType",
+      "OpenClaw Gateway",
+      "TestInteractive",
+      "Zora Daily Git Updater"
+    ],
+    "startup_vbs_scripts_moved_to_manual": true
+  },
   "antigravity_remote_instance": {
-    "status": "LIVE_MOBILE_CONNECTED",
+    "status": "DISABLED_EXAM_SAFE",
+    "daemon_registry_status": "REMOVED",
     "instance_name": "mukil-vivid-void",
-    "dashboard_url": "https://antigravity.google.com",
-    "keep_alive_cron": ".github/workflows/render_keep_alive.yml (24/7 every 10 min)"
+    "dashboard_url": "https://antigravity.google.com"
   },
   "dual_brain_hybrid_system": {
     "status": "OPERATIONAL_VERIFIED",
     "cloud_twin_brain": {
-      "status": "LIVE_24_7_GEMINI_3_6_FLASH",
+      "status": "MIGRATING_TO_HRUNSTOPOFFICIAL_SPEC",
       "sdk": "google.genai",
-      "model": "gemini-3.6-flash",
+      "model": "gemini-3.8-flash",
       "file": "cloud/cloud_twin_agent.py",
-      "deployment": "Render 24/7 (https://aura-os-n6n3.onrender.com)",
+      "target_github": "https://github.com/hrunstopofficial-spec",
+      "previous_deployment": "Render 24/7 (https://aura-os-n6n3.onrender.com) [FREE_TIER_LIMIT_REACHED]",
       "capabilities": [
         "24/7 Autonomous conversational Tanglish executive partner",
         "Direct 250GB Distributed Drive Mesh query (10 nodes)",
@@ -444,8 +461,8 @@
     "sgc_bills_vault_id": "11KMBP0HHa2AFl30zjL8-a_-BQk9MgWM9"
   },
   "daily_fresher_job_dispatcher": {
-    "status": "SCHEDULED_AND_ACTIVE",
-    "schedule": "DAILY_09_00_AM",
+    "status": "DISABLED_FOR_EXAM_SAFETY",
+    "schedule": "PAUSED_MANUAL_ONLY",
     "windows_task_name": "JARVIS_Daily_Fresher_Jobs_9AM",
     "script_path": "C:\\Users\\mukil\\jarvis-core\\tools\\daily_fresher_job_dispatcher.py",
     "last_run": "2026-09-15T08:53:34+05:30",
