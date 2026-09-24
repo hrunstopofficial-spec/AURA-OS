@@ -27,12 +27,12 @@
   "dual_brain_hybrid_system": {
     "status": "OPERATIONAL_VERIFIED",
     "cloud_twin_brain": {
-      "status": "REPO_PUSHED_READY_FOR_RENDER",
+      "status": "LIVE_24_7_RENDER_CLOUD",
       "sdk": "google.genai",
       "model": "gemini-3.8-flash",
       "file": "cloud/cloud_twin_agent.py",
-      "target_github": "https://github.com/hrunstopofficial-spec/AURA-OS",
-      "previous_deployment": "Render 24/7 (https://aura-os-n6n3.onrender.com) [FREE_TIER_LIMIT_REACHED]",
+      "github_repo": "https://github.com/hrunstopofficial-spec/AURA-OS",
+      "deployment": "Render 24/7 (https://aura-os-jarvis.onrender.com)",
       "capabilities": [
         "24/7 Autonomous conversational Tanglish executive partner",
         "Direct 250GB Distributed Drive Mesh query (10 nodes)",
@@ -43,7 +43,7 @@
       "status": "READY_FOR_DEPLOYMENT",
       "file": "tools/pc_relay_daemon.py",
       "desktop_launcher": "C:\\Users\\mukil\\Desktop\\Launch_AURA_Relay_Daemon.bat",
-      "ws_endpoint": "wss://aura-os-n6n3.onrender.com/api/v1/bridge/ws",
+      "ws_endpoint": "wss://aura-os-jarvis.onrender.com/api/v1/bridge/ws",
       "capabilities": [
         "Antigravity CLI headless execution (agy.exe --prompt)",
         "FastOSController RAM-to-Gemini vision and human cadence typing",

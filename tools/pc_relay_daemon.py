@@ -38,7 +38,7 @@ logger = logging.getLogger("PCRelayDaemon")
 
 DEFAULT_CLOUD_WS_URL = os.getenv(
     "AURA_CLOUD_WS_URL",
-    "wss://aura-os-n6n3.onrender.com/api/v1/bridge/ws?worker_id=mukil_pc&token=mukil-aura-pc-bridge-secret-2026"
+    "wss://aura-os-jarvis.onrender.com/api/v1/bridge/ws?worker_id=mukil_pc&token=mukil-aura-pc-bridge-secret-2026"
 )
 LOCAL_DEV_WS_URL = "ws://localhost:8000/api/v1/bridge/ws?worker_id=mukil_pc&token=mukil-aura-pc-bridge-secret-2026"
 
