@@ -21,3 +21,15 @@ services:
         value: '["*"]'
       - key: HOST
         value: 0.0.0.0
+      - key: PC_BRIDGE_SECRET
+        value: mukil-aura-pc-bridge-secret-2026
+      - key: DRIVE_FOLDER_ID
+        value: 1iaHzDzC7KiJk2FlMdS7eNW7vkYxDeaXZ
+      - key: DRIVE_MAIN_BILLS_FOLDER_ID
+        value: 11KMBP0HHa2AFl30zjL8-a_-BQk9MgWM9
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: TELEGRAM_BOT_TOKEN
+        sync: false
+      - key: GROQ_API_KEY
+        sync: false
