@@ -7,6 +7,7 @@ import os
 import sys
 import json
 import logging
+import time
 from typing import Dict, Any, List, Optional
 from datetime import datetime, timezone, timedelta
 
@@ -123,46 +124,55 @@ class CloudTwinAgent:
                 "timestamp": now_ist
             }
 
-        try:
-            # Generate response via google.genai with gemini-3.6-flash
-            response = self.client.models.generate_content(
-                model="gemini-3.6-flash",
-                contents=prompt,
-                config={
-                    "system_instruction": full_system_prompt,
-                    "temperature": 0.7,
-                }
-            )
+        CANDIDATE_MODELS = [
+            "gemini-3.8-flash",
+            "gemini-3.7-flash",
+            "gemini-3.6-flash",
+            "gemini-flash-latest",
+            "gemini-3.5-flash",
+            "gemini-flash-lite-latest",
+        ]
 
-            reply_text = response.text or ""
-            return {
-                "reply": reply_text.strip(),
-                "source": "cloud_twin_gemini_flash",
-                "timestamp": now_ist,
-                "model": "gemini-3.6-flash"
-            }
+        last_error = None
+        for model_name in CANDIDATE_MODELS:
+            for attempt in range(2):
+                try:
+                    response = self.client.models.generate_content(
+                        model=model_name,
+                        contents=prompt,
+                        config={
+                            "system_instruction": full_system_prompt,
+                            "temperature": 0.7,
+                        }
+                    )
+                    reply_text = (response.text or "").strip()
+                    if reply_text:
+                        return {
+                            "reply": reply_text,
+                            "source": f"cloud_twin_{model_name}",
+                            "timestamp": now_ist,
+                            "model": model_name,
+                            "success": True
+                        }
+                except Exception as e:
+                    last_error = e
+                    err_str = str(e).lower()
+                    if "503" in err_str or "unavailable" in err_str or "429" in err_str or "demand" in err_str:
+                        logger.warning(f"High demand on {model_name} (attempt {attempt+1}): {e}. Waiting 1s...")
+                        time.sleep(1.0)
+                        continue
+                    else:
+                        logger.warning(f"Model {model_name} error: {e}. Cascading to next model...")
+                        break
 
-        except Exception as e:
-            logger.error(f"Error during Cloud Twin generation: {e}")
-            # Try fallback model
-            try:
-                response = self.client.models.generate_content(
-                    model="gemini-flash-latest",
-                    contents=prompt,
-                    config={"system_instruction": full_system_prompt}
-                )
-                return {
-                    "reply": (response.text or "").strip(),
-                    "source": "cloud_twin_gemini_fallback",
-                    "timestamp": now_ist
-                }
-            except Exception as e2:
-                logger.error(f"Fallback generation failed: {e2}")
-                return {
-                    "reply": f"Cloud Twin Error: {str(e2)}. Maapla, PC relay online-aa nu check panren.",
-                    "source": "cloud_twin_error",
-                    "timestamp": now_ist
-                }
+        logger.error(f"All Gemini models in cascade exhausted. Last error: {last_error}")
+        return {
+            "reply": None,
+            "source": "cloud_twin_error",
+            "error": str(last_error),
+            "timestamp": now_ist,
+            "success": False
+        }
 
 
 # Global singleton instance

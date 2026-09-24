@@ -298,12 +298,19 @@ class ServerAgentRouter:
         now_ist = datetime.now(ist_tz)
         live_time_str = now_ist.strftime("%I:%M %p, %d %b %Y (%A) IST")
 
-        # 1. Primary Cognitive Brain: Cloud Twin (Gemini 3.6 Flash)
+        # 1. Primary Cognitive Brain: Cloud Twin (Gemini Cascade)
         try:
             from cloud.cloud_twin_agent import cloud_twin
             twin_res = cloud_twin.process_prompt(text, conversation_history)
-            if twin_res and twin_res.get("reply"):
+            if (
+                twin_res
+                and twin_res.get("success", True)
+                and twin_res.get("source") != "cloud_twin_error"
+                and twin_res.get("reply")
+                and not str(twin_res["reply"]).startswith("Cloud Twin Error:")
+            ):
                 return twin_res["reply"]
+            logger.warning(f"Cloud Twin unsuccessful or returned error: {twin_res}. Seamlessly falling back to Groq...")
         except Exception as twin_err:
             logger.warning(f"Cloud Twin fallback to Groq: {twin_err}")
 
